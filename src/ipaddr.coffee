@@ -30,6 +30,10 @@ matchCIDR = (first, second, partSize, cidrBits) ->
 # An utility function to ease named range matching. See examples below.
 ipaddr.matchSubnet = (address, rangeList, defaultName='unicast') ->
   for rangeName, rangeSubnets of rangeList
+    # ECMA5 Array.isArray isn't available everywhere
+    if toString.call(rangeSubnets[0]) != '[object Array]'
+      rangeSubnets = [ rangeSubnets ]
+
     for subnet in rangeSubnets
       return rangeName if address.match.apply(address, subnet)
 
@@ -96,6 +100,10 @@ class ipaddr.IPv4
   range: ->
     return ipaddr.matchSubnet(this, @SpecialRanges)
 
+  # Convrets this IPv4 address to an IPv4-mapped IPv6 address.
+  toIPv4MappedAddress: ->
+    return ipaddr.IPv6.parse "::ffff:#{@toString()}"
+
 # A list of regular expressions that match arbitrary IPv4 addresses,
 # for which a number of weird notations exist.
 # Note that an address like 0010.0xa5.1.1 is considered legal.
@@ -117,25 +125,170 @@ ipaddr.IPv4.parser = (string) ->
   else
     return null
 
-# Checks if a given string is formatted like IPv4 address.
-ipaddr.IPv4.isIPv4 = (string) ->
+# An IPv6 address (RFC2460)
+class ipaddr.IPv6
+  # Constructs an IPv6 address from an array of eight 16-bit parts.
+  # Throws an error if the input is invalid.
+  constructor: (parts) ->
+    if parts.length != 8
+      throw new Error "ipaddr: ipv6 part count should be 8"
+
+    for part in parts
+      if !(0 <= part <= 0xffff)
+        throw new Error "ipaddr: ipv6 part should fit to two octets"
+
+    @parts = parts
+
+  # The 'kind' method exists on both IPv4 and IPv6 classes.
+  kind: ->
+    return 'ipv6'
+
+  # Returns the address in compact, human-readable format like
+  # 2001:db8:8:66::1
+  toString: ->
+    stringParts = (part.toString(16) for part in @parts)
+
+    compactStringParts = []
+    pushPart = (part) -> compactStringParts.push part
+
+    state = 0
+    for part in stringParts
+      switch state
+        when 0
+          if part == '0'
+            state = 1
+          else
+            pushPart(part)
+        when 1
+          unless part == '0'
+            pushPart('')
+            pushPart(part)
+            state = 2
+        when 2
+          pushPart(part)
+
+    pushPart('') if state == ''
+
+    return compactStringParts.join ":"
+
+  # Returns the address in expanded format with all zeroes included, like
+  # 2001:db8:8:66:0:0:0:1
+  toNormalizedString: ->
+    return (part.toString(16) for part in @parts).join ":"
+
+  # Checks if this address matches other one within given CIDR range.
+  match: (other, cidrRange) ->
+    if other.kind() != 'ipv6'
+      throw new Error "ipaddr: cannot match ipv6 address with non-ipv6 one"
+
+    return matchCIDR(this.parts, other.parts, 16, cidrRange)
+
+  # Special IPv6 ranges
+  SpecialRanges:
+    unspecified: [ new IPv6([0,      0,      0, 0, 0,      0,      0, 0]), 128 ] # RFC4291, here and after
+    linkLocal:   [ new IPv6([0xfe80, 0,      0, 0, 0,      0,      0, 0]), 10  ]
+    multicast:   [ new IPv6([0xff00, 0,      0, 0, 0,      0,      0, 0]), 8   ]
+    loopback:    [ new IPv6([0,      0,      0, 0, 0,      0,      0, 1]), 128 ]
+    uniqueLocal: [ new IPv6([0xfc00, 0,      0, 0, 0,      0,      0, 0]), 7   ]
+    ipv4Mapped:  [ new IPv6([0,      0,      0, 0, 0,      0xffff, 0, 0]), 96  ]
+    rfc6145:     [ new IPv6([0,      0,      0, 0, 0xffff, 0,      0, 0]), 96  ] # RFC6145
+    rfc6052:     [ new IPv6([0x64,   0xff9b, 0, 0, 0,      0,      0, 0]), 96  ] # RFC6052
+    '6to4':      [ new IPv6([0x2002, 0,      0, 0, 0,      0,      0, 0]), 16  ] # RFC3056
+    teredo:      [ new IPv6([0x2001, 0,      0, 0, 0,      0,      0, 0]), 32  ] # RFC6052, RFC6146
+    reserved: [
+      [ new IPv6([ 0x2001, 0xdb8, 0, 0, 0, 0, 0, 0]), 32 ] # RFC4291
+    ]
+
+  # Checks if the address corresponds to one of the special ranges.
+  range: ->
+    return ipaddr.matchSubnet(this, @SpecialRanges)
+
+  # Checks if this address is an IPv4-mapped IPv6 address.
+  isIPv4MappedAddress: ->
+    return @range() == 'ipv4Mapped'
+
+  # Converts this address to IPv4 address if it is an IPv4-mapped IPv6 address.
+  # Throws an error otherwise.
+  toIPv4Address: ->
+    unless @isIPv4MappedAddress()
+      throw new Error "ipaddr: trying to convert a generic ipv6 address to ipv4"
+
+    [high, low] = @parts[-2..-1]
+
+    return new ipaddr.IPv4([high >> 8, high & 0xff, low >> 8, low & 0xff])
+
+# IPv6-matching regular expressions.
+# For IPv6, the task is simpler: it is enough to match the colon-delimited
+# hexadecimal IPv6 and a transitional variant with dotted-decimal IPv4 at
+# the end.
+ipv6Part = "(?:[0-9a-f]+::?)+"
+ipv6Regexes =
+  native:       new RegExp "^(::)?(#{ipv6Part})?([0-9a-f]+)?(::)?$", 'i'
+  transitional: new RegExp "^((?:::)?(?:#{ipv6Part})?)#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}$", 'i'
+
+# Expand :: in an IPv6 address or address part consisting of `parts` groups.
+expandIPv6 = (string, parts) ->
+  # More than one '::' means invalid adddress
+  if string.indexOf('::') != string.lastIndexOf('::')
+    return null
+
+  # How many parts do we already have?
+  colonCount = 0
+  lastColon = -1
+  while (lastColon = string.indexOf(':', lastColon + 1)) >= 0
+    colonCount++
+
+  # 0::0 is two parts more than ::
+  colonCount-- if string[0] == ':'
+  colonCount-- if string[string.length-1] == ':'
+
+  # replacement = ':' + '0:' * (parts - colonCount)
+  replacementCount = parts - colonCount
+  replacement = ':'
+  while replacementCount--
+    replacement += '0:'
+
+  # Insert the missing zeroes
+  string = string.replace('::', replacement)
+
+  # Trim any garbage which may be hanging around if :: was at the edge in
+  # the source string
+  string = string[1..-1] if string[0] == ':'
+  string = string[0..-2] if string[string.length-1] == ':'
+
+  return (parseInt(part, 16) for part in string.split(":"))
+
+# Parse an IPv6 address.
+ipaddr.IPv6.parser = (string) ->
+  if string.match(ipv6Regexes['native'])
+    return expandIPv6(string, 8)
+
+  else if match = string.match(ipv6Regexes['transitional'])
+    parts = expandIPv6(match[1][0..-2], 6)
+    if parts
+      parts.push(parseInt(match[2]) << 8 | parseInt(match[3]))
+      parts.push(parseInt(match[4]) << 8 | parseInt(match[5]))
+      return parts
+
+  return null
+
+# Checks if a given string is formatted like IPv4/IPv6 address.
+ipaddr.IPv4.isIPv4 = ipaddr.IPv6.isIPv6 = (string) ->
   return @parser(string) != null
 
-# Checks if a given string is a valid IPv4 address.
-ipaddr.IPv4.isValid = (string) ->
+# Checks if a given string is a valid IPv4/IPv6 address.
+ipaddr.IPv4.isValid = ipaddr.IPv6.isValid = (string) ->
   try
     new this(@parser(string))
     return true
   catch e
     return false
 
-# Tries to parse and validate a string with IPv4 address.
+# Tries to parse and validate a string with IPv4/IPv6 address.
 # Throws an error if it fails.
-ipaddr.IPv4.parse = (string) ->
+ipaddr.IPv4.parse = ipaddr.IPv6.parse = (string) ->
   parts = @parser(string)
   if parts == null
-    throw new Error "ipaddr: string is not formatted like ipv4 address"
+    throw new Error "ipaddr: string is not formatted like ip address"
 
   return new this(parts)
-
-class ipaddr.IPv6

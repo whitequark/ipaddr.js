@@ -97,9 +97,9 @@ module.exports =
     test.done()
 
   'converts IPv6 to string correctly': (test) ->
-    addr = new ipaddr.IPv4([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
-    test.equal(addr.toString(), '2001:db8:f53a::1')
+    addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
     test.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1')
+    test.equal(addr.toString(), '2001:db8:f53a::1')
     test.done()
 
   'returns correct kind for IPv6': (test) ->
@@ -118,16 +118,15 @@ module.exports =
     test.equal(ipaddr.IPv6.isIPv6('::ffff:192.168.1.1'),   true)
     test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1'),   true)
     test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1:0'), false)
-    test.equal(ipaddr.IPv6.isIPv6('2001:db8::F53A::1'),    false)
     test.equal(ipaddr.IPv6.isIPv6('fe80::wtf'),            false)
     test.done()
 
-  'validates IPv4 addresses': (test) ->
+  'validates IPv6 addresses': (test) ->
     test.equal(ipaddr.IPv6.isValid('2001:db8:F53A::1'),    true)
     test.equal(ipaddr.IPv6.isValid('200001::1'),           false)
-    test.equal(ipaddr.IPv6.isIPv6('::ffff:192.168.1.1'),   true)
-    test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1'),   false)
-    test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1:0'), false)
+    test.equal(ipaddr.IPv6.isValid('::ffff:192.168.1.1'),   true)
+    test.equal(ipaddr.IPv6.isValid('::ffff:300.168.1.1'),   false)
+    test.equal(ipaddr.IPv6.isValid('::ffff:300.168.1.1:0'), false)
     test.equal(ipaddr.IPv6.isValid('2001:db8::F53A::1'),   false)
     test.equal(ipaddr.IPv6.isValid('fe80::wtf'),           false)
     test.done()
@@ -135,6 +134,9 @@ module.exports =
   'parses IPv6 in different formats': (test) ->
     test.deepEqual(ipaddr.IPv6.parse('2001:db8:F53A:0:0:0:0:1').parts, [0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
     test.deepEqual(ipaddr.IPv6.parse('fe80::10').parts, [0xfe80, 0, 0, 0, 0, 0, 0, 0x10])
+    test.deepEqual(ipaddr.IPv6.parse('2001:db8:F53A::').parts, [0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 0])
+    test.deepEqual(ipaddr.IPv6.parse('::1').parts, [0, 0, 0, 0, 0, 0, 0, 1])
+    test.deepEqual(ipaddr.IPv6.parse('::').parts, [0, 0, 0, 0, 0, 0, 0, 0])
     test.done()
 
   'barfs at invalid IPv6': (test) ->
@@ -146,10 +148,10 @@ module.exports =
     addr = ipaddr.IPv6.parse('2001:db8:f53a::1')
     test.equal(addr.match(ipaddr.IPv6.parse('::'), 0),                  true)
     test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53a::1:1'), 64), true)
-    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53b::1:1'), 64), false)
-    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f531::1:1'), 60), true)
-    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f500::1'), 56),   true)
-    test.equal(addr.match(ipaddr.IPv6.parse('2001:db9:f500::1'), 56),   false)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53b::1:1'), 48), false)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f531::1:1'), 44), true)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f500::1'), 40),   true)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db9:f500::1'), 40),   false)
     test.equal(addr.match(addr, 128), true)
     test.done()
 
@@ -177,5 +179,5 @@ module.exports =
     test.equal(ipaddr.IPv6.parse('2002:1f63:45e8::1').range(),         '6to4')
     test.equal(ipaddr.IPv6.parse('2001::4242').range(),                'teredo')
     test.equal(ipaddr.IPv6.parse('2001:db8::3210').range(),            'reserved')
-    test.equal(ipaddr.IPv6.parse('2001:470:8:66:1').range(),           'unicast')
+    test.equal(ipaddr.IPv6.parse('2001:470:8:66::1').range(),          'unicast')
     test.done()
