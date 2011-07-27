@@ -224,7 +224,8 @@ class ipaddr.IPv6
 ipv6Part = "(?:[0-9a-f]+::?)+"
 ipv6Regexes =
   native:       new RegExp "^(::)?(#{ipv6Part})?([0-9a-f]+)?(::)?$", 'i'
-  transitional: new RegExp "^((?:::)?(?:#{ipv6Part})?)#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}$", 'i'
+  transitional: new RegExp "^((?:#{ipv6Part})|(?:::)(?:#{ipv6Part})?)" +
+                           "#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}$", 'i'
 
 # Expand :: in an IPv6 address or address part consisting of `parts` groups.
 expandIPv6 = (string, parts) ->
@@ -292,3 +293,24 @@ ipaddr.IPv4.parse = ipaddr.IPv6.parse = (string) ->
     throw new Error "ipaddr: string is not formatted like ip address"
 
   return new this(parts)
+
+# Checks if the address is valid IP address
+ipaddr.isValid = (string) ->
+  return ipaddr.IPv6.isValid(string) || ipaddr.IPv4.isValid(string)
+
+# Try to parse an address and throw an error if it is impossible
+ipaddr.parse = (string) ->
+  if ipaddr.IPv6.isIPv6(string)
+    return ipaddr.IPv6.parse(string)
+  else if ipaddr.IPv4.isIPv4(string)
+    return ipaddr.IPv4.parse(string)
+  else
+    throw new Error "ipaddr: the address has neither IPv6 nor IPv4 format"
+
+# Parse an address and return plain IPv4 address if it is an IPv4-mapped address
+ipaddr.process = (string) ->
+  addr = @parse(string)
+  if addr.kind() == 'ipv6' && addr.isIPv4MappedAddress()
+    return addr.toIPv4Address()
+  else
+    return addr

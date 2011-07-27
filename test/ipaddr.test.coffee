@@ -181,3 +181,19 @@ module.exports =
     test.equal(ipaddr.IPv6.parse('2001:db8::3210').range(),            'reserved')
     test.equal(ipaddr.IPv6.parse('2001:470:8:66::1').range(),          'unicast')
     test.done()
+
+  'is able to determine IP address type': (test) ->
+    test.equal(ipaddr.parse('8.8.8.8').kind(), 'ipv4')
+    test.equal(ipaddr.parse('2001:db8:3312::1').kind(), 'ipv6')
+    test.done()
+
+  'throws an error if tried to parse an invalid address': (test) ->
+    test.throws ->
+      ipaddr.parse('::some.nonsense')
+    test.done()
+
+  'correctly processes IPv4-mapped addresses': (test) ->
+    test.equal(ipaddr.process('8.8.8.8').kind(), 'ipv4')
+    test.equal(ipaddr.process('2001:db8:3312::1').kind(), 'ipv6')
+    test.equal(ipaddr.process('::ffff:192.168.1.1').kind(), 'ipv4')
+    test.done()
