@@ -28,7 +28,7 @@ matchCIDR = (first, second, partSize, cidrBits) ->
   return true
 
 # An utility function to ease named range matching. See examples below.
-matchSubnet = (address, rangeList, defaultName='unicast') ->
+ipaddr.matchSubnet = (address, rangeList, defaultName='unicast') ->
   for rangeName, rangeSubnets of rangeList
     for subnet in rangeSubnets
       return rangeName if address.match.apply(address, subnet)
@@ -94,7 +94,7 @@ class ipaddr.IPv4
 
   # Checks if the address corresponds to one of the special ranges.
   range: ->
-    return matchSubnet(this, @SpecialRanges)
+    return ipaddr.matchSubnet(this, @SpecialRanges)
 
 # A list of regular expressions that match arbitrary IPv4 addresses,
 # for which a number of weird notations exist.
