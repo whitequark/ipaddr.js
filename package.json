@@ -10,7 +10,8 @@
     "coffee-script": ">= 1.1.1"
   },
   "devDependencies": {
-    "nodeunit": "0.5.3"
+    "nodeunit": "0.5.3",
+    "uglify-js": "latest"
   },
   "keywords": ["library", "ipv4", "ipv6"],
   "repository": "git://github.com/whitequark/ipaddr.js",
