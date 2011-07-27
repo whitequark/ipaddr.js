@@ -83,3 +83,99 @@ module.exports =
     test.equal(ipaddr.IPv4.parse('240.1.2.3').range(),       'reserved')
     test.equal(ipaddr.IPv4.parse('8.8.8.8').range(),         'unicast')
     test.done()
+
+  'can construct IPv6 from parts': (test) ->
+    test.doesNotThrow ->
+      new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
+    test.done()
+
+  'refuses to construct invalid IPv4': (test) ->
+    test.throws ->
+      new ipaddr.IPv6([0xfffff, 0, 0, 0, 0, 0, 0, 1])
+    test.throws ->
+      new ipaddr.IPv6([0xfffff, 0, 0, 0, 0, 0, 1])
+    test.done()
+
+  'converts IPv6 to string correctly': (test) ->
+    addr = new ipaddr.IPv4([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
+    test.equal(addr.toString(), '2001:db8:f53a::1')
+    test.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1')
+    test.done()
+
+  'returns correct kind for IPv6': (test) ->
+    addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
+    test.equal(addr.kind(), 'ipv6')
+    test.done()
+
+  'allows to access IPv6 address parts': (test) ->
+    addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 42, 0, 1])
+    test.equal(addr.parts[5], 42)
+    test.done()
+
+  'checks IPv6 address format': (test) ->
+    test.equal(ipaddr.IPv6.isIPv6('2001:db8:F53A::1'),     true)
+    test.equal(ipaddr.IPv6.isIPv6('200001::1'),            true)
+    test.equal(ipaddr.IPv6.isIPv6('::ffff:192.168.1.1'),   true)
+    test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1'),   true)
+    test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1:0'), false)
+    test.equal(ipaddr.IPv6.isIPv6('2001:db8::F53A::1'),    false)
+    test.equal(ipaddr.IPv6.isIPv6('fe80::wtf'),            false)
+    test.done()
+
+  'validates IPv4 addresses': (test) ->
+    test.equal(ipaddr.IPv6.isValid('2001:db8:F53A::1'),    true)
+    test.equal(ipaddr.IPv6.isValid('200001::1'),           false)
+    test.equal(ipaddr.IPv6.isIPv6('::ffff:192.168.1.1'),   true)
+    test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1'),   false)
+    test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1:0'), false)
+    test.equal(ipaddr.IPv6.isValid('2001:db8::F53A::1'),   false)
+    test.equal(ipaddr.IPv6.isValid('fe80::wtf'),           false)
+    test.done()
+
+  'parses IPv6 in different formats': (test) ->
+    test.deepEqual(ipaddr.IPv6.parse('2001:db8:F53A:0:0:0:0:1').parts, [0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
+    test.deepEqual(ipaddr.IPv6.parse('fe80::10').parts, [0xfe80, 0, 0, 0, 0, 0, 0, 0x10])
+    test.done()
+
+  'barfs at invalid IPv6': (test) ->
+    test.throws ->
+      ipaddr.IPv6.parse('fe80::0::1')
+    test.done()
+
+  'matches IPv6 CIDR correctly': (test) ->
+    addr = ipaddr.IPv6.parse('2001:db8:f53a::1')
+    test.equal(addr.match(ipaddr.IPv6.parse('::'), 0),                  true)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53a::1:1'), 64), true)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53b::1:1'), 64), false)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f531::1:1'), 60), true)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f500::1'), 56),   true)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db9:f500::1'), 56),   false)
+    test.equal(addr.match(addr, 128), true)
+    test.done()
+
+  'converts between IPv4-mapped IPv6 addresses and IPv4 addresses': (test) ->
+    addr = ipaddr.IPv4.parse('77.88.21.11')
+    mapped = addr.toIPv4MappedAddress()
+    test.deepEqual(mapped.parts, [0, 0, 0, 0, 0, 0xffff, 0x4d58, 0x150b])
+    test.deepEqual(mapped.toIPv4Address().octets, addr.octets)
+    test.done()
+
+  'refuses to convert non-IPv4-mapped IPv6 address to IPv4 address': (test) ->
+    test.throws ->
+      ipaddr.IPv6.parse('2001:db8::1').toIPv4Address()
+    test.done()
+
+  'detects reserved IPv6 networks': (test) ->
+    test.equal(ipaddr.IPv6.parse('::').range(),                        'unspecified')
+    test.equal(ipaddr.IPv6.parse('fe80::1234:5678:abcd:0123').range(), 'linkLocal')
+    test.equal(ipaddr.IPv6.parse('ff00::1234').range(),                'multicast')
+    test.equal(ipaddr.IPv6.parse('::1').range(),                       'loopback')
+    test.equal(ipaddr.IPv6.parse('fc00::').range(),                    'uniqueLocal')
+    test.equal(ipaddr.IPv6.parse('::ffff:192.168.1.10').range(),       'ipv4Mapped')
+    test.equal(ipaddr.IPv6.parse('::ffff:0:192.168.1.10').range(),     'rfc6145')
+    test.equal(ipaddr.IPv6.parse('64:ff9b::1234').range(),             'rfc6052')
+    test.equal(ipaddr.IPv6.parse('2002:1f63:45e8::1').range(),         '6to4')
+    test.equal(ipaddr.IPv6.parse('2001::4242').range(),                'teredo')
+    test.equal(ipaddr.IPv6.parse('2001:db8::3210').range(),            'reserved')
+    test.equal(ipaddr.IPv6.parse('2001:470:8:66:1').range(),           'unicast')
+    test.done()
