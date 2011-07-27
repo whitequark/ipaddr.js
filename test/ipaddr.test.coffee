@@ -35,14 +35,14 @@ module.exports =
 
   'checks IPv4 address format': (test) ->
     test.equal(ipaddr.IPv4.isIPv4('192.168.007.0xa'), true)
-    test.equal(ipaddr.IPv4.isIPv4('1024.0.0.1'), true)
-    test.equal(ipaddr.IPv4.isIPv4('8.0xa.wtf.6'), false)
+    test.equal(ipaddr.IPv4.isIPv4('1024.0.0.1'),      true)
+    test.equal(ipaddr.IPv4.isIPv4('8.0xa.wtf.6'),     false)
     test.done()
 
   'validates IPv4 addresses': (test) ->
     test.equal(ipaddr.IPv4.isValid('192.168.007.0xa'), true)
-    test.equal(ipaddr.IPv4.isValid('1024.0.0.1'), false)
-    test.equal(ipaddr.IPv4.isValid('8.0xa.wtf.6'), false)
+    test.equal(ipaddr.IPv4.isValid('1024.0.0.1'),      false)
+    test.equal(ipaddr.IPv4.isValid('8.0xa.wtf.6'),     false)
     test.done()
 
   'parses IPv4 in several werid formats': (test) ->
@@ -73,13 +73,13 @@ module.exports =
     test.equal(addr.match(addr, 32), true)
     test.done()
 
-  'detects reserved networks': (test) ->
-    test.equal(ipaddr.IPv4.parse('10.1.0.1').isPrivate(),          true)
-    test.equal(ipaddr.IPv4.parse('192.168.2.1').isPrivate(),       true)
-    test.equal(ipaddr.IPv4.parse('224.100.0.1').isMulticast(),     true)
-    test.equal(ipaddr.IPv4.parse('169.254.15.0').isLinkLocal(),    true)
-    test.equal(ipaddr.IPv4.parse('127.1.1.1').isLoopback(),        true)
-    test.equal(ipaddr.IPv4.parse('255.255.255.255').isBroadcast(), true)
-    test.equal(ipaddr.IPv4.parse('240.1.2.3').isReserved(),        true)
-    test.equal(ipaddr.IPv4.parse('8.8.8.8').isSpecial(),           false)
+  'detects reserved IPv4 networks': (test) ->
+    test.equal(ipaddr.IPv4.parse('10.1.0.1').range(),        'private')
+    test.equal(ipaddr.IPv4.parse('192.168.2.1').range(),     'private')
+    test.equal(ipaddr.IPv4.parse('224.100.0.1').range(),     'multicast')
+    test.equal(ipaddr.IPv4.parse('169.254.15.0').range(),    'linkLocal')
+    test.equal(ipaddr.IPv4.parse('127.1.1.1').range(),       'loopback')
+    test.equal(ipaddr.IPv4.parse('255.255.255.255').range(), 'broadcast')
+    test.equal(ipaddr.IPv4.parse('240.1.2.3').range(),       'reserved')
+    test.equal(ipaddr.IPv4.parse('8.8.8.8').range(),         'unicast')
     test.done()
