@@ -61,6 +61,10 @@ class ipaddr.IPv4
   toString: ->
     return @octets.join "."
 
+  # Returns an array of byte-sized values in network order
+  toByteArray: ->
+    return @octets.slice(0) # octets.clone
+
   # Checks if this address matches other one within given CIDR range.
   match: (other, cidrRange) ->
     if other.kind() != 'ipv4'
@@ -170,6 +174,15 @@ class ipaddr.IPv6
     pushPart('') if state == ''
 
     return compactStringParts.join ":"
+
+  # Returns an array of byte-sized values in network order
+  toByteArray: ->
+    bytes = []
+    for part in @parts
+      bytes.push(part >> 8)
+      bytes.push(part & 0xff)
+
+    return bytes
 
   # Returns the address in expanded format with all zeroes included, like
   # 2001:db8:8:66:0:0:0:1

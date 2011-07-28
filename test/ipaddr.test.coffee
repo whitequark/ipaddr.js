@@ -197,3 +197,11 @@ module.exports =
     test.equal(ipaddr.process('2001:db8:3312::1').kind(), 'ipv6')
     test.equal(ipaddr.process('::ffff:192.168.1.1').kind(), 'ipv4')
     test.done()
+
+  'correctly converts IPv6 and IPv4 addresses to byte arrays': (test) ->
+    test.deepEqual(ipaddr.parse('1.2.3.4').toByteArray(),
+          [0x1, 0x2, 0x3, 0x4]);
+    # Fuck yeah. The first byte of Google's IPv6 address is 42. 42!
+    test.deepEqual(ipaddr.parse('2a00:1450:8007::68').toByteArray(),
+          [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x68 ])
+    test.done()

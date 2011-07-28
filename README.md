@@ -91,6 +91,15 @@ var rangeList = {
 ipaddr.subnetMatch(ipaddr.parse('2001:470:8:66::1'), rangeList, 'unknown'); // => "he.net"
 ```
 
+The addresses can be converted to their byte representation with `toByteArray()`.
+(Actually, JavaScript mostly does not know about byte buffers. They are emulated with
+arrays of numbers, each in range of 0..255.)
+
+```js
+var bytes = ipaddr.parse('2a00:1450:8007::68').toByteArray(); // ipv6.google.com
+bytes // => [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, <zeroes...>, 0x00, 0x68 ]
+```
+
 The `ipaddr.IPv4` and `ipaddr.IPv6` objects have some methods defined, too. All of them
 have the same interface for both protocols, and are similar to global methods.
 
