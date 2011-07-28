@@ -17,7 +17,7 @@ ipaddr.js defines one object in the global scope: `ipaddr`. In CommonJS,
 it is exported from the module:
 
 ```js
-ipaddr = require('ipaddr');
+var ipaddr = require('ipaddr');
 ```
 
 The API consists of several global methods and two classes: ipaddr.IPv6 and ipaddr.IPv4.
