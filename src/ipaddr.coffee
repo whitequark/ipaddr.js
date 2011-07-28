@@ -28,7 +28,7 @@ matchCIDR = (first, second, partSize, cidrBits) ->
   return true
 
 # An utility function to ease named range matching. See examples below.
-ipaddr.matchSubnet = (address, rangeList, defaultName='unicast') ->
+ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
   for rangeName, rangeSubnets of rangeList
     # ECMA5 Array.isArray isn't available everywhere
     if toString.call(rangeSubnets[0]) != '[object Array]'
@@ -98,7 +98,7 @@ class ipaddr.IPv4
 
   # Checks if the address corresponds to one of the special ranges.
   range: ->
-    return ipaddr.matchSubnet(this, @SpecialRanges)
+    return ipaddr.subnetMatch(this, @SpecialRanges)
 
   # Convrets this IPv4 address to an IPv4-mapped IPv6 address.
   toIPv4MappedAddress: ->
@@ -201,7 +201,7 @@ class ipaddr.IPv6
 
   # Checks if the address corresponds to one of the special ranges.
   range: ->
-    return ipaddr.matchSubnet(this, @SpecialRanges)
+    return ipaddr.subnetMatch(this, @SpecialRanges)
 
   # Checks if this address is an IPv4-mapped IPv6 address.
   isIPv4MappedAddress: ->
