@@ -89,7 +89,7 @@ module.exports =
       new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
     test.done()
 
-  'refuses to construct invalid IPv4': (test) ->
+  'refuses to construct invalid IPv6': (test) ->
     test.throws ->
       new ipaddr.IPv6([0xfffff, 0, 0, 0, 0, 0, 0, 1])
     test.throws ->
@@ -100,6 +100,8 @@ module.exports =
     addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
     test.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1')
     test.equal(addr.toString(), '2001:db8:f53a::1')
+    test.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0, 1]).toString(), '::1')
+    test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0, 0, 0, 0, 0, 0]).toString(), '2001:db8::')
     test.done()
 
   'returns correct kind for IPv6': (test) ->

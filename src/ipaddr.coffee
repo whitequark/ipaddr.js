@@ -160,18 +160,27 @@ class ipaddr.IPv6
       switch state
         when 0
           if part == '0'
-            state = 1
+            pushPart('')
           else
             pushPart(part)
+
+          state = 1
         when 1
+          if part == '0'
+            state = 2
+          else
+            pushPart(part)
+        when 2
           unless part == '0'
             pushPart('')
             pushPart(part)
-            state = 2
-        when 2
+            state = 3
+        when 3
           pushPart(part)
 
-    pushPart('') if state == ''
+    if state == 2
+      pushPart('')
+      pushPart('')
 
     return compactStringParts.join ":"
 
