@@ -45,7 +45,7 @@ module.exports =
     test.equal(ipaddr.IPv4.isValid('8.0xa.wtf.6'),     false)
     test.done()
 
-  'parses IPv4 in several werid formats': (test) ->
+  'parses IPv4 in several weird formats': (test) ->
     test.deepEqual(ipaddr.IPv4.parse('192.168.1.1').octets,  [192, 168, 1, 1])
     test.deepEqual(ipaddr.IPv4.parse('0xc0.168.1.1').octets, [192, 168, 1, 1])
     test.deepEqual(ipaddr.IPv4.parse('192.0250.1.1').octets, [192, 168, 1, 1])
