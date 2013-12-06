@@ -13,7 +13,7 @@
     "uglify-js": "latest"
   },
   "scripts": {
-    "test": "cake test"
+    "test": "cake build test"
   },
   "keywords": ["ip", "ipv4", "ipv6"],
   "repository": "git://github.com/whitequark/ipaddr.js",

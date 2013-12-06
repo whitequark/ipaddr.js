@@ -120,11 +120,17 @@ ipv4Regexes =
 # value representing last three octets; this corresponds to a class C
 # address) are omitted due to classless nature of modern Internet.
 ipaddr.IPv4.parser = (string) ->
+  parseIntAuto = (string) ->
+    if string[0] == "0" && string[1] != "x"
+      parseInt(string, 8)
+    else
+      parseInt(string)
+
   # parseInt recognizes all that octal & hexadecimal weirdness for us
   if match = string.match(ipv4Regexes.fourOctet)
-    return (parseInt(part) for part in match[1..5])
+    return (parseIntAuto(part) for part in match[1..5])
   else if match = string.match(ipv4Regexes.longValue)
-    value = parseInt(match[1])
+    value = parseIntAuto(match[1])
     return ((value >> shift) & 0xff for shift in [0..24] by 8).reverse()
   else
     return null
