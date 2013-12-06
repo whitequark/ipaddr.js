@@ -6,10 +6,9 @@
   "directories": {
     "lib": "./lib"
   },
-  "dependencies": {
-    "coffee-script": ">= 1.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "coffee-script": ">= 1.1.1",
     "nodeunit": "0.5.3",
     "uglify-js": "latest"
   },
