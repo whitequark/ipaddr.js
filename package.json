@@ -8,10 +8,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "cake": "~0.1.1",
-    "coffee-script": "~1.6.3",
-    "uglify-js": "~2.4.6",
-    "nodeunit": "~0.8.2"
+    "coffee-script": "~1.6",
+    "nodeunit": "~0.5.3",
+    "uglify-js": "latest"
   },
   "scripts": {
     "test": "cake test"
