@@ -11,23 +11,27 @@ and convert between IPv4 and IPv4-mapped IPv6 addresses.
 
 [nodejs]: http://nodejs.org
 
+## Installation
+
+`npm install ipaddr.js`
+
 ## API
 
 ipaddr.js defines one object in the global scope: `ipaddr`. In CommonJS,
 it is exported from the module:
 
 ```js
-var ipaddr = require('ipaddr');
+var ipaddr = require('ipaddr.js');
 ```
 
 The API consists of several global methods and two classes: ipaddr.IPv6 and ipaddr.IPv4.
 
 ### Global methods
 
-There are three global methods defined: `ipaddr.verify`, `ipaddr.parse` and
+There are three global methods defined: `ipaddr.isValid`, `ipaddr.parse` and
 `ipaddr.process`. All of them receive a string as a single parameter.
 
-The `ipaddr.verify` method returns `true` if the address is a valid IPv4 or
+The `ipaddr.isValid` method returns `true` if the address is a valid IPv4 or
 IPv6 address, and `false` otherwise. It does not throw any exceptions.
 
 The `ipaddr.parse` method returns an object representing the IP address,
