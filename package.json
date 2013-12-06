@@ -8,8 +8,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "coffee-script": ">= 1.1.1",
-    "nodeunit": "0.5.3",
+    "cake": "~> 0.1.1",
+    "coffee-script": "~> 1.6",
+    "nodeunit": "~> 0.5.3",
     "uglify-js": "latest"
   },
   "keywords": ["ip", "ipv4", "ipv6"],
