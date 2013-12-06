@@ -13,6 +13,9 @@
     "nodeunit": "~> 0.5.3",
     "uglify-js": "latest"
   },
+  "scripts": {
+    "test": "cake test"
+  },
   "keywords": ["ip", "ipv4", "ipv6"],
   "repository": "git://github.com/whitequark/ipaddr.js",
   "main": "./lib/ipaddr",
