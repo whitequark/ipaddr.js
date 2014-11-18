@@ -328,9 +328,9 @@ ipaddr.isValid = (string) ->
 
 # Try to parse an address and throw an error if it is impossible
 ipaddr.parse = (string) ->
-  if ipaddr.IPv6.isIPv6(string)
+  if ipaddr.IPv6.isValid(string)
     return ipaddr.IPv6.parse(string)
-  else if ipaddr.IPv4.isIPv4(string)
+  else if ipaddr.IPv4.isValid(string)
     return ipaddr.IPv4.parse(string)
   else
     throw new Error "ipaddr: the address has neither IPv6 nor IPv4 format"

@@ -207,3 +207,9 @@ module.exports =
     test.deepEqual(ipaddr.parse('2a00:1450:8007::68').toByteArray(),
           [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x68 ])
     test.done()
+
+  'correctly parses 1 as an IPv4 address': (test) ->
+    test.equal(ipaddr.IPv6.isValid('1'), false)
+    test.equal(ipaddr.IPv4.isValid('1'), true)
+    test.deepEqual(new ipaddr.IPv4([0, 0, 0, 1]), ipaddr.parse('1'))
+    test.done()
