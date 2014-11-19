@@ -131,6 +131,8 @@ ipaddr.IPv4.parser = (string) ->
     return (parseIntAuto(part) for part in match[1..5])
   else if match = string.match(ipv4Regexes.longValue)
     value = parseIntAuto(match[1])
+    if value > 0xffffffff || value < 0
+      throw new Error "ipaddr: address outside defined range"
     return ((value >> shift) & 0xff for shift in [0..24] by 8).reverse()
   else
     return null

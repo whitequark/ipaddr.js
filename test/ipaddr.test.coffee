@@ -213,3 +213,8 @@ module.exports =
     test.equal(ipaddr.IPv4.isValid('1'), true)
     test.deepEqual(new ipaddr.IPv4([0, 0, 0, 1]), ipaddr.parse('1'))
     test.done()
+
+  'does not consider a very large or very small number a valid IP address': (test) ->
+    test.equal(ipaddr.isValid('4999999999'), false)
+    test.equal(ipaddr.isValid('-1'), false)
+    test.done()
