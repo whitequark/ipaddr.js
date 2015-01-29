@@ -74,6 +74,9 @@ class ipaddr.IPv4
 
   # Special IPv4 address ranges.
   SpecialRanges:
+    unspecified: [
+      [ new IPv4([0,     0,    0,   0]), 32 ]
+    ]
     broadcast: [
       [ new IPv4([255, 255,  255, 255]), 32 ]
     ]
