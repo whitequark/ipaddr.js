@@ -75,6 +75,7 @@ module.exports =
 
   'detects reserved IPv4 networks': (test) ->
     test.equal(ipaddr.IPv4.parse('0.0.0.0').range(),         'unspecified')
+    test.equal(ipaddr.IPv4.parse('0.1.0.0').range(),         'unspecified')
     test.equal(ipaddr.IPv4.parse('10.1.0.1').range(),        'private')
     test.equal(ipaddr.IPv4.parse('192.168.2.1').range(),     'private')
     test.equal(ipaddr.IPv4.parse('224.100.0.1').range(),     'multicast')
