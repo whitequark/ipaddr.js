@@ -276,6 +276,10 @@ expandIPv6 = (string, parts) ->
   colonCount-- if string[0] == ':'
   colonCount-- if string[string.length-1] == ':'
 
+  # The following loop would hang if colonCount > parts
+  if colonCount > parts
+    return null
+
   # replacement = ':' + '0:' * (parts - colonCount)
   replacementCount = parts - colonCount
   replacement = ':'

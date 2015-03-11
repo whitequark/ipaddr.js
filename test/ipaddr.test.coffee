@@ -220,3 +220,7 @@ module.exports =
     test.equal(ipaddr.isValid('4999999999'), false)
     test.equal(ipaddr.isValid('-1'), false)
     test.done()
+
+  'does not hang on ::8:8:8:8:8:8:8:8:8': (test) ->
+    test.equal(ipaddr.IPv6.isValid('::8:8:8:8:8:8:8:8:8'), false)
+    test.done()
