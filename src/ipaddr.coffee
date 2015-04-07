@@ -67,6 +67,9 @@ class ipaddr.IPv4
 
   # Checks if this address matches other one within given CIDR range.
   match: (other, cidrRange) ->
+    if cidrRange == undefined
+      [other, cidrRange] = other
+
     if other.kind() != 'ipv4'
       throw new Error "ipaddr: cannot match ipv4 address with non-ipv4 one"
 
@@ -211,6 +214,9 @@ class ipaddr.IPv6
 
   # Checks if this address matches other one within given CIDR range.
   match: (other, cidrRange) ->
+    if cidrRange == undefined
+      [other, cidrRange] = other
+
     if other.kind() != 'ipv6'
       throw new Error "ipaddr: cannot match ipv6 address with non-ipv6 one"
 
@@ -330,6 +336,12 @@ ipaddr.IPv4.parse = ipaddr.IPv6.parse = (string) ->
     throw new Error "ipaddr: string is not formatted like ip address"
 
   return new this(parts)
+
+ipaddr.IPv4.parseCIDR = ipaddr.IPv6.parseCIDR = (string) ->
+  if match = string.match(/^(.+)\/(\d+)$/)
+    return [@parse(match[1]), parseInt(match[2])]
+
+  throw new Error "ipaddr: string is not formatted like a CIDR range"
 
 # Checks if the address is valid IP address
 ipaddr.isValid = (string) ->
