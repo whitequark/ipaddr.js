@@ -245,6 +245,13 @@ module.exports =
     test.deepEqual(new ipaddr.IPv4([0, 0, 0, 1]), ipaddr.parse('1'))
     test.done()
 
+  'correctly detects IPv4 and IPv6 CIDR addresses': (test) ->
+    test.deepEqual([ipaddr.IPv6.parse('fc00::'), 64],
+                   ipaddr.parseCIDR('fc00::/64'))
+    test.deepEqual([ipaddr.IPv4.parse('1.2.3.4'), 5],
+                   ipaddr.parseCIDR('1.2.3.4/5'))
+    test.done()
+
   'does not consider a very large or very small number a valid IP address': (test) ->
     test.equal(ipaddr.isValid('4999999999'), false)
     test.equal(ipaddr.isValid('-1'), false)

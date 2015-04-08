@@ -356,6 +356,15 @@ ipaddr.parse = (string) ->
   else
     throw new Error "ipaddr: the address has neither IPv6 nor IPv4 format"
 
+ipaddr.parseCIDR = (string) ->
+  try
+    return ipaddr.IPv6.parseCIDR(string)
+  catch e
+    try
+      return ipaddr.IPv4.parseCIDR(string)
+    catch e
+      throw new Error "ipaddr: the address has neither IPv6 nor IPv4 CIDR format"
+
 # Parse an address and return plain IPv4 address if it is an IPv4-mapped address
 ipaddr.process = (string) ->
   addr = @parse(string)
