@@ -260,3 +260,13 @@ module.exports =
   'does not hang on ::8:8:8:8:8:8:8:8:8': (test) ->
     test.equal(ipaddr.IPv6.isValid('::8:8:8:8:8:8:8:8:8'), false)
     test.done()
+    
+  'subnetMatch does not fail on empty range': (test) -> 
+    ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {}, false)
+    ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false)
+    test.done()
+
+  'subnetMatch returns default subnet on empty range': (test) -> 
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {}, false), false)
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false), false)
+    test.done()
