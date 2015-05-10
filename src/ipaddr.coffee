@@ -31,7 +31,7 @@ matchCIDR = (first, second, partSize, cidrBits) ->
 ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
   for rangeName, rangeSubnets of rangeList
     # ECMA5 Array.isArray isn't available everywhere
-    if rangeSubnets[0] && toString.call(rangeSubnets[0]) != '[object Array]'
+    if rangeSubnets[0] && !(rangeSubnets[0] instanceof Array)
       rangeSubnets = [ rangeSubnets ]
 
     for subnet in rangeSubnets
