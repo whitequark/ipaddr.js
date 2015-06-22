@@ -1,11 +1,11 @@
 {
   "name": "ipaddr.js",
-  "version": "1.1.9",
+  "version": "1.0.1",
   "homepage": "https://github.com/whitequark/ipaddr.js",
   "authors": [
-    "\"Peter Zotov <whitequark@whitequark.org>\""
+    "Peter Zotov <whitequark@whitequark.org>"
   ],
-  "description": "\"IP address manipulation library in JavaScript (CoffeeScript, actually)\"",
+  "description": "IP address manipulation library in JavaScript (CoffeeScript, actually)",
   "main": "lib/ipaddr.js",
   "moduleType": [
     "globals",
