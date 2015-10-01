@@ -279,8 +279,8 @@ expandIPv6 = (string, parts) ->
     colonCount++
 
   # 0::0 is two parts more than ::
-  colonCount-- if string[0] == ':'
-  colonCount-- if string[string.length-1] == ':'
+  colonCount-- if string.substr(0, 2) == '::'
+  colonCount-- if string.substr(-2, 2) == '::'
 
   # The following loop would hang if colonCount > parts
   if colonCount > parts

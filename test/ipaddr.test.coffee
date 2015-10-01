@@ -142,13 +142,14 @@ module.exports =
     test.done()
 
   'validates IPv6 addresses': (test) ->
-    test.equal(ipaddr.IPv6.isValid('2001:db8:F53A::1'),    true)
-    test.equal(ipaddr.IPv6.isValid('200001::1'),           false)
+    test.equal(ipaddr.IPv6.isValid('2001:db8:F53A::1'),     true)
+    test.equal(ipaddr.IPv6.isValid('200001::1'),            false)
     test.equal(ipaddr.IPv6.isValid('::ffff:192.168.1.1'),   true)
     test.equal(ipaddr.IPv6.isValid('::ffff:300.168.1.1'),   false)
     test.equal(ipaddr.IPv6.isValid('::ffff:300.168.1.1:0'), false)
-    test.equal(ipaddr.IPv6.isValid('2001:db8::F53A::1'),   false)
-    test.equal(ipaddr.IPv6.isValid('fe80::wtf'),           false)
+    test.equal(ipaddr.IPv6.isValid('2001:db8::F53A::1'),    false)
+    test.equal(ipaddr.IPv6.isValid('fe80::wtf'),            false)
+    test.equal(ipaddr.IPv6.isValid('2002::2:'),             false)
     test.done()
 
   'parses IPv6 in different formats': (test) ->
@@ -260,13 +261,13 @@ module.exports =
   'does not hang on ::8:8:8:8:8:8:8:8:8': (test) ->
     test.equal(ipaddr.IPv6.isValid('::8:8:8:8:8:8:8:8:8'), false)
     test.done()
-    
-  'subnetMatch does not fail on empty range': (test) -> 
+
+  'subnetMatch does not fail on empty range': (test) ->
     ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {}, false)
     ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false)
     test.done()
 
-  'subnetMatch returns default subnet on empty range': (test) -> 
+  'subnetMatch returns default subnet on empty range': (test) ->
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {}, false), false)
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false), false)
     test.done()
