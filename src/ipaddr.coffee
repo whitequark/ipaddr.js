@@ -321,7 +321,19 @@ ipaddr.IPv4.isIPv4 = ipaddr.IPv6.isIPv6 = (string) ->
   return @parser(string) != null
 
 # Checks if a given string is a valid IPv4/IPv6 address.
-ipaddr.IPv4.isValid = ipaddr.IPv6.isValid = (string) ->
+ipaddr.IPv4.isValid = (string) ->
+  try
+    new this(@parser(string))
+    return true
+  catch e
+    return false
+
+ipaddr.IPv6.isValid = (string) ->
+  # Since IPv6.isValid is always called first, this shortcut
+  # provides a substantial performance gain.
+  if string.indexOf(":") == -1
+    return false
+
   try
     new this(@parser(string))
     return true
