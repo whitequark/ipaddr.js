@@ -349,11 +349,21 @@ ipaddr.IPv4.parse = ipaddr.IPv6.parse = (string) ->
 
   return new this(parts)
 
-ipaddr.IPv4.parseCIDR = ipaddr.IPv6.parseCIDR = (string) ->
+ipaddr.IPv4.parseCIDR = (string) ->
   if match = string.match(/^(.+)\/(\d+)$/)
-    return [@parse(match[1]), parseInt(match[2])]
+    maskLength = parseInt(match[2])
+    if maskLength >= 0 and maskLength <= 32
+      return [@parse(match[1]), maskLength]
 
-  throw new Error "ipaddr: string is not formatted like a CIDR range"
+  throw new Error "ipaddr: string is not formatted like an IPv4 CIDR range"
+
+ipaddr.IPv6.parseCIDR = (string) ->
+  if match = string.match(/^(.+)\/(\d+)$/)
+    maskLength = parseInt(match[2])
+    if maskLength >= 0 and maskLength <= 128
+      return [@parse(match[1]), maskLength]
+
+  throw new Error "ipaddr: string is not formatted like an IPv6 CIDR range"
 
 # Checks if the address is valid IP address
 ipaddr.isValid = (string) ->

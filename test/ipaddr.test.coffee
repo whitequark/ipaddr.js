@@ -87,6 +87,10 @@ module.exports =
     test.equal(addr.match(ipaddr.IPv4.parseCIDR('10.5.0.1/32')), true)
     test.throws ->
       ipaddr.IPv4.parseCIDR('10.5.0.1')
+    test.throws ->
+      ipaddr.IPv4.parseCIDR('0.0.0.0/-1')
+    test.throws ->
+      ipaddr.IPv4.parseCIDR('0.0.0.0/33')
     test.done()
 
   'detects reserved IPv4 networks': (test) ->
@@ -187,6 +191,10 @@ module.exports =
     test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f53a::1/128')),  true)
     test.throws ->
       ipaddr.IPv6.parseCIDR('2001:db8:f53a::1')
+    test.throws ->
+      ipaddr.IPv6.parseCIDR('2001:db8:f53a::1/-1')
+    test.throws ->
+      ipaddr.IPv6.parseCIDR('2001:db8:f53a::1/129')
     test.done()
 
   'converts between IPv4-mapped IPv6 addresses and IPv4 addresses': (test) ->
