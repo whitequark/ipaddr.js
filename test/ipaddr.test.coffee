@@ -154,6 +154,7 @@ module.exports =
     test.equal(ipaddr.IPv6.isValid('2001:db8::F53A::1'),    false)
     test.equal(ipaddr.IPv6.isValid('fe80::wtf'),            false)
     test.equal(ipaddr.IPv6.isValid('2002::2:'),             false)
+    test.equal(ipaddr.IPv6.isValid(undefined),              false)
     test.done()
 
   'parses IPv6 in different formats': (test) ->
