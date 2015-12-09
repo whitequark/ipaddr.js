@@ -331,7 +331,7 @@ ipaddr.IPv4.isValid = (string) ->
 ipaddr.IPv6.isValid = (string) ->
   # Since IPv6.isValid is always called first, this shortcut
   # provides a substantial performance gain.
-  if string.indexOf(":") == -1
+  if typeof string == "string" and string.indexOf(":") == -1
     return false
 
   try
