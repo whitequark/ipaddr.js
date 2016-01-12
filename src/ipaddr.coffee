@@ -41,7 +41,8 @@ ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
 
 # An IPv4 address (RFC791).
 class ipaddr.IPv4
-  # Constructs a new IPv4 address from an array of four octets.
+  # Constructs a new IPv4 address from an array of four octets
+  # in network order (MSB first)
   # Verifies the input.
   constructor: (octets) ->
     if octets.length != 4
@@ -61,7 +62,7 @@ class ipaddr.IPv4
   toString: ->
     return @octets.join "."
 
-  # Returns an array of byte-sized values in network order
+  # Returns an array of byte-sized values in network order (MSB first)
   toByteArray: ->
     return @octets.slice(0) # octets.clone
 
@@ -145,7 +146,8 @@ ipaddr.IPv4.parser = (string) ->
 
 # An IPv6 address (RFC2460)
 class ipaddr.IPv6
-  # Constructs an IPv6 address from an array of eight 16-bit parts.
+  # Constructs an IPv6 address from an array of eight 16-bit parts
+  # in network order (MSB first).
   # Throws an error if the input is invalid.
   constructor: (parts) ->
     if parts.length != 8
@@ -198,7 +200,7 @@ class ipaddr.IPv6
 
     return compactStringParts.join ":"
 
-  # Returns an array of byte-sized values in network order
+  # Returns an array of byte-sized values in network order (MSB first)
   toByteArray: ->
     bytes = []
     for part in @parts
@@ -387,6 +389,7 @@ ipaddr.parseCIDR = (string) ->
     catch e
       throw new Error "ipaddr: the address has neither IPv6 nor IPv4 CIDR format"
 
+# Try to parse an array in network order (MSB first) for IPv4 and IPv6
 ipaddr.parseBinary = (bytes) ->
   length = bytes.length
   if length == 4
