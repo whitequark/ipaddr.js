@@ -145,17 +145,22 @@ ipaddr.IPv4.parser = (string) ->
 
 # An IPv6 address (RFC2460)
 class ipaddr.IPv6
-  # Constructs an IPv6 address from an array of eight 16-bit parts.
+  # Constructs an IPv6 address from an array of eight 16-bit parts
+  # or sixteen 8-bit parts.
   # Throws an error if the input is invalid.
   constructor: (parts) ->
-    if parts.length != 8
-      throw new Error "ipaddr: ipv6 part count should be 8"
+    if parts.length == 16
+      @parts = []
+      for i in [0..14] by 2
+        @parts.push((parts[i] << 8) | parts[i + 1])
+    else if parts.length == 8
+      @parts = parts
+    else
+      throw new Error "ipaddr: ipv6 part count should be 8 or 16"
 
-    for part in parts
+    for part in @parts
       if !(0 <= part <= 0xffff)
         throw new Error "ipaddr: ipv6 part should fit to two octets"
-
-    @parts = parts
 
   # The 'kind' method exists on both IPv4 and IPv6 classes.
   kind: ->
@@ -386,6 +391,15 @@ ipaddr.parseCIDR = (string) ->
       return ipaddr.IPv4.parseCIDR(string)
     catch e
       throw new Error "ipaddr: the address has neither IPv6 nor IPv4 CIDR format"
+
+ipaddr.parseBinary = (bytes) ->
+  length = bytes.length
+  if length == 4
+    return new ipaddr.IPv4(bytes)
+  else if length == 8 or length == 16
+    return new ipaddr.IPv6(bytes)
+  else
+    throw new Error "ipaddr: the binary input is neither an IPv6 nor IPv4 address"
 
 # Parse an address and return plain IPv4 address if it is an IPv4-mapped address
 ipaddr.process = (string) ->
