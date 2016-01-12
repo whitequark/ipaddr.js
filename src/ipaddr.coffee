@@ -390,7 +390,7 @@ ipaddr.parseCIDR = (string) ->
       throw new Error "ipaddr: the address has neither IPv6 nor IPv4 CIDR format"
 
 # Try to parse an array in network order (MSB first) for IPv4 and IPv6
-ipaddr.parseBinary = (bytes) ->
+ipaddr.parseBytes = (bytes) ->
   length = bytes.length
   if length == 4
     return new ipaddr.IPv4(bytes)

@@ -282,8 +282,8 @@ module.exports =
     test.done()
 
   'is able to determine IP address type from binary input': (test) ->
-    test.equal(ipaddr.parseBinary([0x7f, 0, 0, 1]).kind(), 'ipv4')
-    test.equal(ipaddr.parseBinary([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]).kind(), 'ipv6')
+    test.equal(ipaddr.parseBytes([0x7f, 0, 0, 1]).kind(), 'ipv4')
+    test.equal(ipaddr.parseBytes([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]).kind(), 'ipv6')
     test.throws ->
-      ipaddr.parseBinary([1])
+      ipaddr.parseBytes([1])
     test.done()
