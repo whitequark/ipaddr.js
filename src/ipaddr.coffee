@@ -387,6 +387,15 @@ ipaddr.parseCIDR = (string) ->
     catch e
       throw new Error "ipaddr: the address has neither IPv6 nor IPv4 CIDR format"
 
+ipaddr.parseBinary = (bytes) ->
+  length = bytes.length
+  if length == 4
+    return new ipaddr.IPv4(bytes)
+  else if length == 8
+    return new ipaddr.IPv6(bytes)
+  else
+    throw new Error "ipaddr: the binary input is neither an IPv6 nor IPv4 address"
+
 # Parse an address and return plain IPv4 address if it is an IPv4-mapped address
 ipaddr.process = (string) ->
   addr = @parse(string)

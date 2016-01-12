@@ -280,3 +280,10 @@ module.exports =
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {}, false), false)
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false), false)
     test.done()
+
+  'is able to determine IP address type from binary input': (test) ->
+    test.equal(ipaddr.parseBinary([0x7f, 0, 0, 1]).kind(), 'ipv4')
+    test.equal(ipaddr.parseBinary([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]).kind(), 'ipv6')
+    test.throws ->
+      ipaddr.parseBinary([1])
+    test.done()
