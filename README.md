@@ -166,7 +166,7 @@ IPv4 and IPv6 can be converted bidirectionally to and from network byte order (M
 
 The `parseBytes()` method will take an array and create an appropriate IPv4 or IPv6 object
 if the input satisfies the requirements. For IPv4 it has to be an array of four 8-bit values,
-while for IPv6 it has to be an array of eight 16-bit or sixteen 8-bit values.
+while for IPv6 it has to be an array of sixteen 8-bit values.
 
 For example:
 ```js
@@ -178,13 +178,6 @@ or
 
 ```js
 var addr = ipaddr.parseBytes([0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
-addr.toString(); // => "2001:db8::1"
-```
-
-or
-
-```js
-var addr = ipaddr.parseBytes([0x2001, 0xdb8, 0, 0, 0, 0, 0, 1]);
 addr.toString(); // => "2001:db8::1"
 ```
 
