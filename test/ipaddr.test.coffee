@@ -106,9 +106,16 @@ module.exports =
     test.equal(ipaddr.IPv4.parse('8.8.8.8').range(),         'unicast')
     test.done()
 
-  'can construct IPv6 from parts': (test) ->
+  'can construct IPv6 from 16bit parts': (test) ->
     test.doesNotThrow ->
       new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
+    test.done()
+
+  'can construct IPv6 from 8bit parts': (test) ->
+    test.doesNotThrow ->
+      new ipaddr.IPv6([0x20, 0x01, 0xd, 0xb8, 0xf5, 0x3a, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+    test.deepEqual(new ipaddr.IPv6([0x20, 0x01, 0xd, 0xb8, 0xf5, 0x3a, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]),
+      new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]))
     test.done()
 
   'refuses to construct invalid IPv6': (test) ->
@@ -116,6 +123,8 @@ module.exports =
       new ipaddr.IPv6([0xfffff, 0, 0, 0, 0, 0, 0, 1])
     test.throws ->
       new ipaddr.IPv6([0xfffff, 0, 0, 0, 0, 0, 1])
+    test.throws ->
+      new ipaddr.IPv6([0xffff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
     test.done()
 
   'converts IPv6 to string correctly': (test) ->
@@ -279,4 +288,11 @@ module.exports =
   'subnetMatch returns default subnet on empty range': (test) ->
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {}, false), false)
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false), false)
+    test.done()
+
+  'is able to determine IP address type from byte array input': (test) ->
+    test.equal(ipaddr.fromByteArray([0x7f, 0, 0, 1]).kind(), 'ipv4')
+    test.equal(ipaddr.fromByteArray([0x20, 0x01, 0xd, 0xb8, 0xf5, 0x3a, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]).kind(), 'ipv6')
+    test.throws ->
+      ipaddr.fromByteArray([1])
     test.done()

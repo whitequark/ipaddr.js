@@ -163,3 +163,39 @@ To access the underlying representation of the address, use `addr.octets`.
 var addr = ipaddr.parse("192.168.1.1");
 addr.octets // => [192, 168, 1, 1]
 ```
+
+#### Conversion
+
+IPv4 and IPv6 can be converted bidirectionally to and from network byte order (MSB) byte arrays.
+
+The `fromByteArray()` method will take an array and create an appropriate IPv4 or IPv6 object
+if the input satisfies the requirements. For IPv4 it has to be an array of four 8-bit values,
+while for IPv6 it has to be an array of sixteen 8-bit values.
+
+For example:
+```js
+var addr = ipaddr.fromByteArray([0x7f, 0, 0, 1]);
+addr.toString(); // => "127.0.0.1"
+```
+
+or
+
+```js
+var addr = ipaddr.fromByteArray([0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+addr.toString(); // => "2001:db8::1"
+```
+
+Both objects also offer a `toByteArray()` method, which returns an array in network byte order (MSB).
+
+For example:
+```js
+var addr = ipaddr.parse("127.0.0.1");
+addr.toByteArray(); // => [0x7f, 0, 0, 1]
+```
+
+or
+
+```js
+var addr = ipaddr.parse("2001:db8::1");
+addr.toByteArray(); // => [0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+```
