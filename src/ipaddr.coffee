@@ -115,10 +115,10 @@ class ipaddr.IPv4
   toIPv4MappedAddress: ->
     return ipaddr.IPv6.parse "::ffff:#{@toString()}"
 
-  # returns a number of trailing zeroes in IPv4 address, making sure that
-  # the rest is a solid sequence of 1's (valid netmask)
-  # returns either the CIDR length or false if mask is not valid
-  mask2CIDR: ->
+  # returns a number of leading ones in IPv4 address, making sure that
+  # the rest is a solid sequence of 0's (valid netmask)
+  # returns either the CIDR length or null if mask is not valid
+  prefixLengthFromSubnetMask: ->
     # number of zeroes in octet
     zerotable =
       0:   8
@@ -139,12 +139,12 @@ class ipaddr.IPv4
       if octet of zerotable
         zeros = zerotable[octet]
         if stop and zeros != 0
-          return false
+          return null
         unless zeros == 8
           stop = true
         cidr += zeros
       else
-        return false
+        return null
     return 32 - cidr
 
 # A list of regular expressions that match arbitrary IPv4 addresses,
