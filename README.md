@@ -164,6 +164,14 @@ var addr = ipaddr.parse("192.168.1.1");
 addr.octets // => [192, 168, 1, 1]
 ```
 
+`mask2CIDR()` will return a CIDR prefix length for a valid IPv4 netmask or
+false if the netmask is not valid.
+
+```js
+ipaddr.IPv4.parse('255.255.255.240').mask2CIDR() == 28
+ipaddr.IPv4.parse('255.192.164.0').mask2CIDR()  == false
+```
+
 #### Conversion
 
 IPv4 and IPv6 can be converted bidirectionally to and from network byte order (MSB) byte arrays.
