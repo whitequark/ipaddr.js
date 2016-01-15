@@ -331,5 +331,8 @@ module.exports =
     test.equal(ipaddr.IPv4.parse('192.0.0.0').prefixLengthFromSubnetMask(), 2)
     test.equal(ipaddr.IPv4.parse('128.0.0.0').prefixLengthFromSubnetMask(), 1)
     test.equal(ipaddr.IPv4.parse('0.0.0.0').prefixLengthFromSubnetMask(), 0)
+    # negative cases
+    test.equal(ipaddr.IPv4.parse('192.168.255.0').prefixLengthFromSubnetMask(), null)
+    test.equal(ipaddr.IPv4.parse('255.0.255.0').prefixLengthFromSubnetMask(), null)
     test.done()
 
