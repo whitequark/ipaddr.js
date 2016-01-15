@@ -169,7 +169,7 @@ false if the netmask is not valid.
 
 ```js
 ipaddr.IPv4.parse('255.255.255.240').prefixLengthFromSubnetMask() == 28
-ipaddr.IPv4.parse('255.192.164.0').prefixLengthFromSubnetMask()  == false
+ipaddr.IPv4.parse('255.192.164.0').prefixLengthFromSubnetMask()  == null
 ```
 
 #### Conversion
