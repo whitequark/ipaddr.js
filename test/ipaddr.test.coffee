@@ -252,7 +252,7 @@ module.exports =
 
   'correctly converts IPv6 and IPv4 addresses to byte arrays': (test) ->
     test.deepEqual(ipaddr.parse('1.2.3.4').toByteArray(),
-          [0x1, 0x2, 0x3, 0x4]);
+          [0x1, 0x2, 0x3, 0x4])
     # Fuck yeah. The first byte of Google's IPv6 address is 42. 42!
     test.deepEqual(ipaddr.parse('2a00:1450:8007::68').toByteArray(),
           [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x68 ])
@@ -334,5 +334,15 @@ module.exports =
     # negative cases
     test.equal(ipaddr.IPv4.parse('192.168.255.0').prefixLengthFromSubnetMask(), null)
     test.equal(ipaddr.IPv4.parse('255.0.255.0').prefixLengthFromSubnetMask(), null)
+    test.done()
+
+  'prefixLengthFromSubnetMask returns proper CIDR notation for standard IPv6 masks': (test) ->
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').prefixLengthFromSubnetMask(), 128)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe').prefixLengthFromSubnetMask(), 127)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffc').prefixLengthFromSubnetMask(), 126)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffff:ffff:ff80:0000').prefixLengthFromSubnetMask(), 105)
+    #negative cases
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffc0:ffff:ff80:0000').prefixLengthFromSubnetMask(), null)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffff:ffff:31e0:0000').prefixLengthFromSubnetMask(), null)
     test.done()
 
