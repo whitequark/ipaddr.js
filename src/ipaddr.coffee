@@ -50,7 +50,7 @@ class ipaddr.IPv4
 
     for octet in octets
       if !(0 <= octet <= 255)
-        throw new Error "ipaddr: ipv4 octet is a byte"
+        throw new Error "ipaddr: ipv4 octet should fit in 8 bits"
 
     @octets = octets
 
@@ -193,7 +193,7 @@ class ipaddr.IPv6
 
     for part in @parts
       if !(0 <= part <= 0xffff)
-        throw new Error "ipaddr: ipv6 part should fit to two octets"
+        throw new Error "ipaddr: ipv6 part should fit in 16 bits"
 
   # The 'kind' method exists on both IPv4 and IPv6 classes.
   kind: ->
@@ -348,8 +348,14 @@ ipaddr.IPv6.parser = (string) ->
   else if match = string.match(ipv6Regexes['transitional'])
     parts = expandIPv6(match[1][0..-2], 6)
     if parts
-      parts.push(parseInt(match[2]) << 8 | parseInt(match[3]))
-      parts.push(parseInt(match[4]) << 8 | parseInt(match[5]))
+      octets = [parseInt(match[2]), parseInt(match[3]),
+                parseInt(match[4]), parseInt(match[5])]
+      for octet in octets
+        if !(0 <= octet <= 255)
+          return null
+
+      parts.push(octets[0] << 8 | octets[1])
+      parts.push(octets[2] << 8 | octets[3])
       return parts
 
   return null
