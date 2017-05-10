@@ -37,7 +37,7 @@ ipaddr.subnetMaskFromPrefixLength = (prefix) ->
   while j < Math.floor(prefix / 8)
     octets[j] = 255
     j++
-  octets[Math.floor(prefix / 8)] = parseInt(Array(prefix % 8).fill(1).concat(Array(8 - (prefix % 8)).fill(0)).join(''), 2)
+  octets[Math.floor(prefix / 8)] = 2 ** (prefix % 8) - 1 << 8 - (prefix % 8)
   new (ipaddr.IPv4)(octets)
 
 # An utility function to ease named range matching. See examples below.
