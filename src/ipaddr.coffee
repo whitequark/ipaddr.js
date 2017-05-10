@@ -52,12 +52,11 @@ ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
 
   return defaultName
 
-# A utility function to return broadcast address given the IP interface and prefix length in CIDR notation
+# A utility function to return broadcast address given the IPv4 interface and prefix length in CIDR notation
 ipaddr.broadcastAddressFromCIDR = (string) ->
   try
     ipInterface = ipaddr.IPv4.parseCIDR(string)[0]
     subnetMask = @subnetMaskFromPrefixLength([ ipaddr.IPv4.parseCIDR(string)[1] ])
-    i = undefined
     octets = []
     i = 0
     while i < 4
@@ -66,15 +65,14 @@ ipaddr.broadcastAddressFromCIDR = (string) ->
       i++
     return new (ipaddr.IPv4)(octets)
   catch error
-    throw new Error('ipaddr: the address has neither IPv6 nor IPv4 CIDR format')
+    throw new Error('ipaddr: the address does not have IPv4 CIDR format')
   return
 
-# A utility function to return network address given the IP interface and prefix length in CIDR notation
+# A utility function to return network address given the IPv4 interface and prefix length in CIDR notation
 ipaddr.networkAddressFromCIDR = (string) ->
   try
     ipInterface = ipaddr.IPv4.parseCIDR(string)[0]
     subnetMask = @subnetMaskFromPrefixLength([ ipaddr.IPv4.parseCIDR(string)[1] ])
-    i = undefined
     octets = []
     i = 0
     while i < 4
@@ -83,7 +81,7 @@ ipaddr.networkAddressFromCIDR = (string) ->
       i++
     return new (ipaddr.IPv4)(octets)
   catch error
-    throw new Error('ipaddr: the address has neither IPv6 nor IPv4 CIDR format')
+    throw new Error('ipaddr: the address does not have IPv4 CIDR format')
   return
 
     
