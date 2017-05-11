@@ -420,7 +420,7 @@ ipaddr.IPv4.subnetMaskFromPrefixLength = (prefix) ->
   while j < Math.floor(prefix / 8)
     octets[j] = 255
     j++
-  octets[Math.floor(prefix / 8)] = 2 ** (prefix % 8) - 1 << 8 - (prefix % 8)
+  octets[Math.floor(prefix / 8)] = Math.pow(2, (prefix % 8)) - 1 << 8 - (prefix % 8)
   new (ipaddr.IPv4)(octets)
 
 # A utility function to return broadcast address given the IPv4 interface and prefix length in CIDR notation
