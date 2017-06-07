@@ -97,8 +97,7 @@ in the source: [IPv6 ranges] and [IPv4 ranges]. Some common ones include `"unica
 (the default one) and `"reserved"`.
 
 You can match against your own range list by using
-`ipaddr.subnetMatch(address, rangeList, defaultName)` method. It can work with both
-IPv6 and IPv4 addresses, and accepts a name-to-subnet map as the range list. For example:
+`ipaddr.subnetMatch(address, rangeList, defaultName)` method. It can work with either IPv6 or IPv4 addresses (for range lists with both, use `ipaddr.subnetMatchDual`), and accepts a name-to-subnet map as the range list. For example:
 
 ```js
 var rangeList = {

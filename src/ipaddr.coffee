@@ -28,16 +28,21 @@ matchCIDR = (first, second, partSize, cidrBits) ->
   return true
 
 # An utility function to ease named range matching. See examples below.
-ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
+ipaddr.subnetMatch = (address, rangeList, defaultName='unicast', dual=false) ->
   for rangeName, rangeSubnets of rangeList
     # ECMA5 Array.isArray isn't available everywhere
     if rangeSubnets[0] && !(rangeSubnets[0] instanceof Array)
       rangeSubnets = [ rangeSubnets ]
 
     for subnet in rangeSubnets
-      return rangeName if address.match.apply(address, subnet)
+      if dual == false || address.kind == subnet[0].kind
+        return rangeName if address.match.apply(address, subnet)
 
   return defaultName
+
+# An utility function to ease named range matching. This version allows tables with both IPv4 and IPv6 addresses.
+ipaddr.subnetMatchDual = (address, rangeList, defaultName='unicast') ->
+  return ipaddr.subnetMatch(address, rangeList, defaultName, true)
 
 # An IPv4 address (RFC791).
 class ipaddr.IPv4
