@@ -301,6 +301,7 @@ module.exports =
   'is able to determine IP address type from byte array input': (test) ->
     test.equal(ipaddr.fromByteArray([0x7f, 0, 0, 1]).kind(), 'ipv4')
     test.equal(ipaddr.fromByteArray([0x20, 0x01, 0xd, 0xb8, 0xf5, 0x3a, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]).kind(), 'ipv6')
+    test.equal(ipaddr.fromByteArray([ 0, 0, 0, 0, 0, 0, 0, 1]).kind(), 'ipv6')
     test.throws ->
       ipaddr.fromByteArray([1])
     test.done()

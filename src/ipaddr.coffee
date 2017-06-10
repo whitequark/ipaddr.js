@@ -490,7 +490,7 @@ ipaddr.fromByteArray = (bytes) ->
   length = bytes.length
   if length == 4
     return new ipaddr.IPv4(bytes)
-  else if length == 16
+  else if length == 16 || length == 8
     return new ipaddr.IPv6(bytes)
   else
     throw new Error "ipaddr: the binary input is neither an IPv6 nor IPv4 address"
