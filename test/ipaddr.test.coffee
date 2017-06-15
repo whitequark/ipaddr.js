@@ -298,6 +298,22 @@ module.exports =
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false), false)
     test.done()
 
+  'subnetMatch does not fail on IPv4 when looking for IPv6': (test) ->
+    rangelist = {subnet6: ipaddr.parseCIDR('fe80::/64')}
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), rangelist, false), false)
+    test.done()
+
+  'subnetMatch does not fail on IPv6 when looking for IPv4': (test) ->
+    rangelist = {subnet4: ipaddr.parseCIDR('1.2.3.0/24')}
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv6([0xfe80, 0, 0, 0, 0, 0, 0, 1]), rangelist, false), false)
+    test.done()
+
+  'subnetMatch can use a hybrid IPv4/IPv6 range list': (test) ->
+    rangelist = {dual64: [ipaddr.parseCIDR('1.2.4.0/24'), ipaddr.parseCIDR('2001:1:2:3::/64')]}
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,4,1]), rangelist, false), 'dual64')
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv6([0x2001, 1, 2, 3, 0, 0, 0, 1]), rangelist, false), 'dual64')
+    test.done()
+
   'is able to determine IP address type from byte array input': (test) ->
     test.equal(ipaddr.fromByteArray([0x7f, 0, 0, 1]).kind(), 'ipv4')
     test.equal(ipaddr.fromByteArray([0x20, 0x01, 0xd, 0xb8, 0xf5, 0x3a, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]).kind(), 'ipv6')

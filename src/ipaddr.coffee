@@ -28,6 +28,8 @@ matchCIDR = (first, second, partSize, cidrBits) ->
   return true
 
 # An utility function to ease named range matching. See examples below.
+# rangeList can contain both IPv4 and IPv6 subnet entries and will not throw errors
+# on matching IPv4 addresses to IPv6 ranges or vice versa.
 ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
   for rangeName, rangeSubnets of rangeList
     # ECMA5 Array.isArray isn't available everywhere
@@ -35,7 +37,9 @@ ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
       rangeSubnets = [ rangeSubnets ]
 
     for subnet in rangeSubnets
-      return rangeName if address.match.apply(address, subnet)
+      if address.kind == subnet[0].kind
+        if address.match.apply(address, subnet)
+          return rangeName
 
   return defaultName
 
