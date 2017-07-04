@@ -360,8 +360,19 @@ module.exports =
     test.equal(ipaddr.IPv4.parse('255.0.255.0').prefixLengthFromSubnetMask(), null)
     test.done()
 
+  'prefixLengthFromSubnetMask returns proper CIDR notation for standard IPv6 masks': (test) ->
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').prefixLengthFromSubnetMask(), 128)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff::').prefixLengthFromSubnetMask(), 64)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ff80::').prefixLengthFromSubnetMask(), 57)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff::').prefixLengthFromSubnetMask(), 48)
+    test.equal(ipaddr.IPv6.parse('::').prefixLengthFromSubnetMask(), 0)
+    # negative cases
+    test.equal(ipaddr.IPv6.parse('2001:db8::').prefixLengthFromSubnetMask(), null)
+    test.equal(ipaddr.IPv6.parse('ffff:0:0:ffff::').prefixLengthFromSubnetMask(), null)
+    test.done()
+
   'subnetMaskFromPrefixLength returns correct subnet mask given prefix length': (test) ->
-        
+
     test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength("0"), "0.0.0.0");
     test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength("1"), "128.0.0.0")
     test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength("2"), "192.0.0.0")
@@ -395,12 +406,12 @@ module.exports =
     test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength("30"), "255.255.255.252")
     test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength("31"), "255.255.255.254")
     test.done()
-    
+
   'broadcastAddressFromCIDR returns correct broadcast address': (test) ->
     test.equal(ipaddr.IPv4.broadcastAddressFromCIDR("172.0.0.1/24"), "172.0.0.255")
     test.equal(ipaddr.IPv4.broadcastAddressFromCIDR("172.0.0.1/26"), "172.0.0.63")
     test.done()
-        
+
   'networkAddressFromCIDR returns correct network address': (test) ->
     test.equal(ipaddr.IPv4.networkAddressFromCIDR("172.0.0.1/24"), "172.0.0.0")
     test.equal(ipaddr.IPv4.networkAddressFromCIDR("172.0.0.1/5"), "168.0.0.0")
