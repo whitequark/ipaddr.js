@@ -302,6 +302,46 @@ class ipaddr.IPv6
 
     return new ipaddr.IPv4([high >> 8, high & 0xff, low >> 8, low & 0xff])
 
+  # returns a number of leading ones in IPv6 address, making sure that
+  # the rest is a solid sequence of 0's (valid netmask)
+  # returns either the CIDR length or null if mask is not valid
+  prefixLengthFromSubnetMask: ->
+    # number of zeroes in octet
+    zerotable =
+      0    : 16
+      32768: 15
+      49152: 14
+      57344: 13
+      61440: 12
+      63488: 11
+      64512: 10
+      65024: 9
+      65280: 8
+      65408: 7
+      65472: 6
+      65504: 5
+      65520: 4
+      65528: 3
+      65532: 2
+      65534: 1
+      65535: 0
+
+    cidr = 0
+    # non-zero encountered stop scanning for zeroes
+    stop = false
+    for i in [7..0] by -1
+      part = @parts[i]
+      if part of zerotable
+        zeros = zerotable[part]
+        if stop and zeros != 0
+          return null
+        unless zeros == 16
+          stop = true
+        cidr += zeros
+      else
+        return null
+    return 128 - cidr
+
 # IPv6-matching regular expressions.
 # For IPv6, the task is simpler: it is enough to match the colon-delimited
 # hexadecimal IPv6 and a transitional variant with dotted-decimal IPv4 at
