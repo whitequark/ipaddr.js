@@ -43,7 +43,7 @@ or throws an `Error` if the passed string is not a valid representation of an
 IP address.
 
 The `ipaddr.process` method works just like the `ipaddr.parse` one, but it
-automatically converts IPv4-mapped IPv6 addresses to their IPv4 couterparts
+automatically converts IPv4-mapped IPv6 addresses to their IPv4 counterparts
 before returning. It is useful when you have a Node.js instance listening
 on an IPv6 socket, and the `net.ivp6.bindv6only` sysctl parameter (or its
 equivalent on non-Linux OS) is set to 0. In this case, you can accept IPv4
@@ -154,6 +154,13 @@ var addr = ipaddr.parse("2001:db8:10::1234:DEAD");
 addr.parts // => [0x2001, 0xdb8, 0x10, 0, 0, 0, 0x1234, 0xdead]
 ```
 
+A IPv6 zone index can be accessed via `addr.zoneId`:
+
+```js
+var addr = ipaddr.parse("2001:db8::%eth0");
+addr.zoneId // => 'eth0'
+```
+
 #### IPv4 properties
 
 `toIPv4MappedAddress()` will return a corresponding IPv4-mapped IPv6 address.
@@ -180,7 +187,7 @@ ipaddr.IPv4.subnetMaskFromPrefixLength("24") == "255.255.255.0"
 ipaddr.IPv4.subnetMaskFromPrefixLength("29") == "255.255.255.248"
 ```
 
-`broadcastAddressFromCIDR()` will return the broadcast address for a given IPv4 interface and netmask in CIDR notation. 
+`broadcastAddressFromCIDR()` will return the broadcast address for a given IPv4 interface and netmask in CIDR notation.
 ```js
 ipaddr.IPv4.broadcastAddressFromCIDR("172.0.0.1/24") == "172.0.0.255"
 ```

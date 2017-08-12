@@ -189,7 +189,7 @@ class ipaddr.IPv6
   # Constructs an IPv6 address from an array of eight 16-bit parts
   # or sixteen 8-bit parts in network order (MSB first).
   # Throws an error if the input is invalid.
-  constructor: (parts) ->
+  constructor: (parts, zoneId) ->
     if parts.length == 16
       @parts = []
       for i in [0..14] by 2
@@ -202,6 +202,9 @@ class ipaddr.IPv6
     for part in @parts
       if !(0 <= part <= 0xffff)
         throw new Error "ipaddr: ipv6 part should fit in 16 bits"
+
+    if zoneId
+      @zoneId = zoneId
 
   # The 'kind' method exists on both IPv4 and IPv6 classes.
   kind: ->
@@ -242,7 +245,13 @@ class ipaddr.IPv6
       pushPart('')
       pushPart('')
 
-    return compactStringParts.join ":"
+    addr = compactStringParts.join ":"
+
+    suffix = ''
+    if @zoneId
+      suffix = '%' + @zoneId
+
+    return addr + suffix
 
   # Returns an array of byte-sized values in network order (MSB first)
   toByteArray: ->
@@ -256,7 +265,13 @@ class ipaddr.IPv6
   # Returns the address in expanded format with all zeroes included, like
   # 2001:db8:8:66:0:0:0:1
   toNormalizedString: ->
-    return (part.toString(16) for part in @parts).join ":"
+    addr = (part.toString(16) for part in @parts).join ":"
+
+    suffix = ''
+    if @zoneId
+      suffix = '%' + @zoneId
+
+    return addr + suffix
 
   # Checks if this address matches other one within given CIDR range.
   match: (other, cidrRange) ->
@@ -347,16 +362,25 @@ class ipaddr.IPv6
 # hexadecimal IPv6 and a transitional variant with dotted-decimal IPv4 at
 # the end.
 ipv6Part = "(?:[0-9a-f]+::?)+"
+zoneIndex = "%[0-9a-z]{1,}"
 ipv6Regexes =
-  native:       new RegExp "^(::)?(#{ipv6Part})?([0-9a-f]+)?(::)?$", 'i'
+  zoneIndex:    new RegExp zoneIndex, 'i'
+  native:       new RegExp "^(::)?(#{ipv6Part})?([0-9a-f]+)?(::)?(#{zoneIndex})?$", 'i'
   transitional: new RegExp "^((?:#{ipv6Part})|(?:::)(?:#{ipv6Part})?)" +
-                           "#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}$", 'i'
+                           "#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}\\.#{ipv4Part}" +
+                           "(#{zoneIndex})?$", 'i'
 
 # Expand :: in an IPv6 address or address part consisting of `parts` groups.
 expandIPv6 = (string, parts) ->
   # More than one '::' means invalid adddress
   if string.indexOf('::') != string.lastIndexOf('::')
     return null
+
+  # Remove zone index and save it for later
+  zoneId = (string.match(zoneIndex) || [])[0];
+  if zoneId
+    zoneId = zoneId.substring(1);
+    string = string.replace(/%.+$/, '');
 
   # How many parts do we already have?
   colonCount = 0
@@ -386,25 +410,26 @@ expandIPv6 = (string, parts) ->
   string = string[1..-1] if string[0] == ':'
   string = string[0..-2] if string[string.length-1] == ':'
 
-  return (parseInt(part, 16) for part in string.split(":"))
+  parts = (parseInt(part, 16) for part in string.split(":"))
+  return {parts: parts, zoneId: zoneId}
 
 # Parse an IPv6 address.
 ipaddr.IPv6.parser = (string) ->
-  if string.match(ipv6Regexes['native'])
+  if ipv6Regexes['native'].test(string)
     return expandIPv6(string, 8)
 
   else if match = string.match(ipv6Regexes['transitional'])
-    parts = expandIPv6(match[1][0..-2], 6)
-    if parts
+    addr = expandIPv6(match[1][0..-2], 6)
+    if addr.parts
       octets = [parseInt(match[2]), parseInt(match[3]),
                 parseInt(match[4]), parseInt(match[5])]
       for octet in octets
         if !(0 <= octet <= 255)
           return null
 
-      parts.push(octets[0] << 8 | octets[1])
-      parts.push(octets[2] << 8 | octets[3])
-      return parts
+      addr.parts.push(octets[0] << 8 | octets[1])
+      addr.parts.push(octets[2] << 8 | octets[3])
+      return {parts: addr.parts, zoneId: addr.zoneId}
 
   return null
 
@@ -433,19 +458,27 @@ ipaddr.IPv6.isValid = (string) ->
     return false
 
   try
-    new this(@parser(string))
+    addr = @parser(string)
+    new this(addr.parts, addr.zoneId)
     return true
   catch e
     return false
 
 # Tries to parse and validate a string with IPv4/IPv6 address.
 # Throws an error if it fails.
-ipaddr.IPv4.parse = ipaddr.IPv6.parse = (string) ->
+ipaddr.IPv4.parse= (string) ->
   parts = @parser(string)
   if parts == null
     throw new Error "ipaddr: string is not formatted like ip address"
 
   return new this(parts)
+
+ipaddr.IPv6.parse = (string) ->
+  addr = @parser(string)
+  if addr.parts == null
+    throw new Error "ipaddr: string is not formatted like ip address"
+
+  return new this(addr.parts, addr.zoneId)
 
 ipaddr.IPv4.parseCIDR = (string) ->
   if match = string.match(/^(.+)\/(\d+)$/)
