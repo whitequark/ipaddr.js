@@ -459,7 +459,7 @@ ipaddr.IPv4.parseCIDR = (string) ->
 ipaddr.IPv4.subnetMaskFromPrefixLength = (prefix) ->
   if prefix < 0 or prefix > 32
     throw new Error('ipaddr: invalid prefix length')
-  octets = Array(4).fill(0)
+  octets = [0, 0, 0, 0]
   j = 0
   while j < Math.floor(prefix / 8)
     octets[j] = 255
