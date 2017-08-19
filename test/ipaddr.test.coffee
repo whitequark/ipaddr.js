@@ -21,6 +21,7 @@ module.exports =
   'converts IPv4 to string correctly': (test) ->
     addr = new ipaddr.IPv4([192, 168, 1, 1])
     test.equal(addr.toString(), '192.168.1.1')
+    test.equal(addr.toNormalizedString(), '192.168.1.1')
     test.done()
 
   'returns correct kind for IPv4': (test) ->

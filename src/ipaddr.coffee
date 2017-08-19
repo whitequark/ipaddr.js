@@ -66,6 +66,10 @@ class ipaddr.IPv4
   toString: ->
     return @octets.join "."
 
+  # Symmetrical method strictly for aligning with the IPv6 methods.
+  toNormalizedString: ->
+    return this.toString()
+
   # Returns an array of byte-sized values in network order (MSB first)
   toByteArray: ->
     return @octets.slice(0) # octets.clone
