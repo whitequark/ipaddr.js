@@ -37,7 +37,7 @@ ipaddr.subnetMatch = (address, rangeList, defaultName='unicast') ->
       rangeSubnets = [ rangeSubnets ]
 
     for subnet in rangeSubnets
-      if address.kind == subnet[0].kind
+      if address.kind() == subnet[0].kind()
         if address.match.apply(address, subnet)
           return rangeName
 
