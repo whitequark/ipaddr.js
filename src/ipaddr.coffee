@@ -494,28 +494,32 @@ ipaddr.IPv4.parseCIDR = (string) ->
 
 # A utility function to return subnet mask in IPv4 format given the prefix length
 ipaddr.IPv4.subnetMaskFromPrefixLength = (prefix) ->
+  prefix = parseInt(prefix)
   if prefix < 0 or prefix > 32
-    throw new Error('ipaddr: invalid prefix length')
-  octets = Array(4).fill(0)
+    throw new Error('ipaddr: invalid IPv4 prefix length')
+  octets = [0, 0, 0, 0]
   j = 0
-  while j < Math.floor(prefix / 8)
+  filledOctetCount = Math.floor(prefix / 8)
+  while j < filledOctetCount
     octets[j] = 255
     j++
-  octets[Math.floor(prefix / 8)] = Math.pow(2, (prefix % 8)) - 1 << 8 - (prefix % 8)
-  new (ipaddr.IPv4)(octets)
+  if filledOctetCount < 4
+    octets[filledOctetCount] = Math.pow(2, (prefix % 8)) - 1 << 8 - (prefix % 8)
+  new @(octets)
 
 # A utility function to return broadcast address given the IPv4 interface and prefix length in CIDR notation
 ipaddr.IPv4.broadcastAddressFromCIDR = (string) ->
   try
-    ipInterface = ipaddr.IPv4.parseCIDR(string)[0]
-    subnetMask = @subnetMaskFromPrefixLength([ ipaddr.IPv4.parseCIDR(string)[1] ])
+    cidr = @parseCIDR(string)
+    ipInterfaceOctets = cidr[0].toByteArray()
+    subnetMaskOctets = @subnetMaskFromPrefixLength(cidr[1]).toByteArray()
     octets = []
     i = 0
     while i < 4
       # Broadcast address is bitwise OR between ip interface and inverted mask
-      octets.push parseInt(ipInterface.octets[i], 10) | parseInt(subnetMask.octets[i], 10) ^ 255
+      octets.push parseInt(ipInterfaceOctets[i], 10) | parseInt(subnetMaskOctets[i], 10) ^ 255
       i++
-    return new (ipaddr.IPv4)(octets)
+    return new @(octets)
   catch error
     throw new Error('ipaddr: the address does not have IPv4 CIDR format')
   return
@@ -523,15 +527,16 @@ ipaddr.IPv4.broadcastAddressFromCIDR = (string) ->
 # A utility function to return network address given the IPv4 interface and prefix length in CIDR notation
 ipaddr.IPv4.networkAddressFromCIDR = (string) ->
   try
-    ipInterface = ipaddr.IPv4.parseCIDR(string)[0]
-    subnetMask = @subnetMaskFromPrefixLength([ ipaddr.IPv4.parseCIDR(string)[1] ])
+    cidr = @parseCIDR(string)
+    ipInterfaceOctets = cidr[0].toByteArray()
+    subnetMaskOctets = @subnetMaskFromPrefixLength(cidr[1]).toByteArray()
     octets = []
     i = 0
     while i < 4
       # Network address is bitwise AND between ip interface and mask
-      octets.push parseInt(ipInterface.octets[i], 10) & parseInt(subnetMask.octets[i], 10)
+      octets.push parseInt(ipInterfaceOctets[i], 10) & parseInt(subnetMaskOctets[i], 10)
       i++
-    return new (ipaddr.IPv4)(octets)
+    return new @(octets)
   catch error
     throw new Error('ipaddr: the address does not have IPv4 CIDR format')
   return
