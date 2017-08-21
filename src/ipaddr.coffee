@@ -381,10 +381,10 @@ expandIPv6 = (string, parts) ->
     return null
 
   # Remove zone index and save it for later
-  zoneId = (string.match(zoneIndex) || [])[0];
+  zoneId = (string.match(zoneIndex) || [])[0]
   if zoneId
-    zoneId = zoneId.substring(1);
-    string = string.replace(/%.+$/, '');
+    zoneId = zoneId.substring(1)
+    string = string.replace(/%.+$/, '')
 
   # How many parts do we already have?
   colonCount = 0
@@ -415,7 +415,7 @@ expandIPv6 = (string, parts) ->
   string = string[0..-2] if string[string.length-1] == ':'
 
   parts = (parseInt(part, 16) for part in string.split(":"))
-  return {parts: parts, zoneId: zoneId}
+  return { parts: parts, zoneId: zoneId }
 
 # Parse an IPv6 address.
 ipaddr.IPv6.parser = (string) ->
@@ -423,7 +423,8 @@ ipaddr.IPv6.parser = (string) ->
     return expandIPv6(string, 8)
 
   else if match = string.match(ipv6Regexes['transitional'])
-    addr = expandIPv6(match[1][0..-2], 6)
+    zoneId = match[6] || ''
+    addr = expandIPv6(match[1][0..-2] + zoneId, 6)
     if addr.parts
       octets = [parseInt(match[2]), parseInt(match[3]),
                 parseInt(match[4]), parseInt(match[5])]
@@ -433,7 +434,7 @@ ipaddr.IPv6.parser = (string) ->
 
       addr.parts.push(octets[0] << 8 | octets[1])
       addr.parts.push(octets[2] << 8 | octets[3])
-      return {parts: addr.parts, zoneId: addr.zoneId}
+      return { parts: addr.parts, zoneId: addr.zoneId }
 
   return null
 
@@ -470,7 +471,7 @@ ipaddr.IPv6.isValid = (string) ->
 
 # Tries to parse and validate a string with IPv4/IPv6 address.
 # Throws an error if it fails.
-ipaddr.IPv4.parse= (string) ->
+ipaddr.IPv4.parse = (string) ->
   parts = @parser(string)
   if parts == null
     throw new Error "ipaddr: string is not formatted like ip address"
