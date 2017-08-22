@@ -542,6 +542,28 @@ ipaddr.IPv4.networkAddressFromCIDR = (string) ->
     throw new Error('ipaddr: the address does not have IPv4 CIDR format')
   return
 
+# A utility function to return the last effective host address given the IPv4 interface and prefix length in CIDR notation
+ipaddr.IPv4.lastAddressFromCIDR = (string) ->
+  try
+    # Last address is one less than the broadcast address
+    octets = @broadcastAddressFromCIDR(string).toByteArray()
+    octets[3] -= 1;
+    return new @(octets)
+  catch error
+    throw new Error('ipaddr: the address does not have IPv4 CIDR format')
+  return
+
+# A utility function to return the first effective host address given the IPv4 interface and prefix length in CIDR notation
+ipaddr.IPv4.firstAddressFromCIDR = (string) ->
+  try
+    # First address is one more than the network address
+    octets = @networkAddressFromCIDR(string).toByteArray()
+    octets[3] += 1;
+    return new @(octets)
+  catch error
+    throw new Error('ipaddr: the address does not have IPv4 CIDR format')
+  return
+
 ipaddr.IPv6.parseCIDR = (string) ->
   if match = string.match(/^(.+)\/(\d+)$/)
     maskLength = parseInt(match[2])
@@ -549,6 +571,63 @@ ipaddr.IPv6.parseCIDR = (string) ->
       return [@parse(match[1]), maskLength]
 
   throw new Error "ipaddr: string is not formatted like an IPv6 CIDR range"
+
+# A utility function to return subnet mask in IPv6 format given the prefix length
+ipaddr.IPv6.subnetMaskFromPrefixLength = (prefix) ->
+  prefix = parseInt(prefix)
+  if prefix < 0 or prefix > 128
+    throw new Error('ipaddr: invalid IPv6 prefix length')
+  octets = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  j = 0
+  filledOctetCount = Math.floor(prefix / 8)
+  while j < filledOctetCount
+    octets[j] = 255
+    j++
+  if filledOctetCount < 16
+    octets[filledOctetCount] = Math.pow(2, (prefix % 8)) - 1 << 8 - (prefix % 8)
+  new @(octets)
+
+ipaddr.IPv6.broadcastAddressFromCIDR = (string) ->
+  throw new Error('ipaddr: IPv6 subnets do not have broadcast addresses')
+
+ipaddr.IPv6.networkAddressFromCIDR = (string) ->
+  throw new Error('ipaddr: IPv6 subnets do not have network addresses')
+
+# A utility function to return the last effective host address given the IPv6 interface and prefix length in CIDR notation
+ipaddr.IPv6.lastAddressFromCIDR = (string) ->
+  try
+    cidr = @parseCIDR(string)
+    ipInterface = cidr[0]
+    ipInterfaceOctets = ipInterface.toByteArray()
+    subnetMaskOctets = @subnetMaskFromPrefixLength(cidr[1]).toByteArray()
+    octets = []
+    i = 0
+    while i < 16
+      # Last address is bitwise OR between ip interface and inverted mask
+      octets.push parseInt(ipInterfaceOctets[i], 10) | parseInt(subnetMaskOctets[i], 10) ^ 255
+      i++
+    return new @(octets, ipInterface.zoneId)
+  catch error
+    throw new Error('ipaddr: the address does not have IPv6 CIDR format')
+  return
+
+# A utility function to return the first effective host address given the IPv6 interface and prefix length in CIDR notation
+ipaddr.IPv6.firstAddressFromCIDR = (string) ->
+  try
+    cidr = @parseCIDR(string)
+    ipInterface = cidr[0]
+    ipInterfaceOctets = ipInterface.toByteArray()
+    subnetMaskOctets = @subnetMaskFromPrefixLength(cidr[1]).toByteArray()
+    octets = []
+    i = 0
+    while i < 16
+      # First address is bitwise AND between ip interface and mask
+      octets.push parseInt(ipInterfaceOctets[i], 10) & parseInt(subnetMaskOctets[i], 10)
+      i++
+    return new @(octets, ipInterface.zoneId)
+  catch error
+    throw new Error('ipaddr: the address does not have IPv6 CIDR format')
+  return
 
 # Checks if the address is valid IP address
 ipaddr.isValid = (string) ->
@@ -582,10 +661,30 @@ ipaddr.fromByteArray = (bytes) ->
   else
     throw new Error "ipaddr: the binary input is neither an IPv6 nor IPv4 address"
 
-# Parse an address and return plain IPv4 address if it is an IPv4-mapped address
+# Parse an address and return plain IPv4 address if it is an IPv4-mapped IPv6 address
 ipaddr.process = (string) ->
   addr = @parse(string)
   if addr.kind() == 'ipv6' && addr.isIPv4MappedAddress()
     return addr.toIPv4Address()
   else
     return addr
+
+# Parse a CIDR
+#  - return IPv4 CIDR with network address if it is:
+#     - a normal IPv4 address
+#     - an IPv4-mapped IPv6 address with prefix >= 96 (0) and <= 128 (32)
+#  - return IPv6 CIDR with first effective host address
+ipaddr.processCIDR = (string) ->
+  cidr = @parseCIDR(string)
+  addr = cidr[0]
+  maskLength = cidr[1]
+  if addr.kind() == 'ipv6' && addr.isIPv4MappedAddress() && maskLength >= 96 && maskLength <= 128
+    addr = addr.toIPv4Address()
+    maskLength -= 96
+
+  if addr.kind() == 'ipv6'
+    addr = ipaddr.IPv6.firstAddressFromCIDR(addr.toString() + '/' + maskLength)
+  else
+    addr = ipaddr.IPv4.networkAddressFromCIDR(addr.toString() + '/' + maskLength)
+
+  return [addr, maskLength]
