@@ -381,7 +381,7 @@ expandIPv6 = (string, parts) ->
     return null
 
   # Remove zone index and save it for later
-  zoneId = (string.match(zoneIndex) || [])[0]
+  zoneId = (string.match(ipv6Regexes['zoneIndex']) || [])[0]
   if zoneId
     zoneId = zoneId.substring(1)
     string = string.replace(/%.+$/, '')
