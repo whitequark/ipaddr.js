@@ -147,12 +147,40 @@ module.exports =
     addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1], 'utun0')
     test.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1%utun0')
     test.equal(addr.toString(), '2001:db8:f53a::1%utun0')
+
+    test.equal(
+      ipaddr.parse('2001:db8:f53a::1%2').toString(),
+      '2001:db8:f53a::1%2'
+    )
+    test.equal(
+      ipaddr.parse('2001:db8:f53a::1%WAT').toString(),
+      '2001:db8:f53a::1%WAT'
+    )
+    test.equal(
+      ipaddr.parse('2001:db8:f53a::1%sUp').toString(),
+      '2001:db8:f53a::1%sUp'
+    )
+
     test.done()
 
   'returns IPv6 zoneIndex for IPv4-mapped IPv6 addresses': (test) ->
     addr = ipaddr.parse('::ffff:192.168.1.1%eth0')
     test.equal(addr.toNormalizedString(), '0:0:0:0:0:ffff:c0a8:101%eth0')
     test.equal(addr.toString(), '::ffff:c0a8:101%eth0')
+
+    test.equal(
+      ipaddr.parse('::ffff:192.168.1.1%2').toString(),
+      '::ffff:c0a8:101%2'
+    )
+    test.equal(
+      ipaddr.parse('::ffff:192.168.1.1%WAT').toString(),
+      '::ffff:c0a8:101%WAT'
+    )
+    test.equal(
+      ipaddr.parse('::ffff:192.168.1.1%sUp').toString(),
+      '::ffff:c0a8:101%sUp'
+    )
+
     test.done()
 
   'returns correct kind for IPv6': (test) ->
