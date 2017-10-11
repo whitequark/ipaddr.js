@@ -17,7 +17,7 @@
   },
   "keywords": ["ip", "ipv4", "ipv6"],
   "repository": "git://github.com/whitequark/ipaddr.js",
-  "main": "./lib/ipaddr",
+  "main": "./lib/ipaddr.js",
   "engines": { "node": ">= 0.10" },
   "license": "MIT"
 }
