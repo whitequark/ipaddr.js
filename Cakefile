@@ -3,7 +3,7 @@ CoffeeScript = require 'coffee-script'
 nodeunit     = require 'nodeunit'
 UglifyJS     = require 'uglify-js'
 
-task 'build', 'build the JavaScript files from CoffeeScript source', build = (cb) ->
+task 'all', 'test everything and build minified code', build = (cb) ->
   source = fs.readFileSync 'src/ipaddr.coffee', 'utf-8'
   fs.writeFileSync 'lib/ipaddr.js', CoffeeScript.compile source.toString()
 
