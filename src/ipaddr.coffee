@@ -471,6 +471,21 @@ ipaddr.IPv4.subnetMaskFromPrefixLength = (prefix) ->
     octets[filledOctetCount] = Math.pow(2, (prefix % 8)) - 1 << 8 - (prefix % 8)
   new @(octets)
 
+# A utility function to return subnet mask in IPv6 format given the prefix length
+ipaddr.IPv6.subnetMaskFromPrefixLength = (prefix) ->
+  prefix = parseInt(prefix)
+  if prefix < 0 or prefix > 128
+    throw new Error('ipaddr: invalid IPv6 prefix length')
+  bytes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  j = 0
+  filledBytesCount = Math.floor(prefix / 8)
+  while j < filledBytesCount
+    bytes[j] = 255
+    j++
+  if filledBytesCount < 16
+    octets[filledOctetCount] = Math.pow(2, (prefix % 8)) - 1 << 8 - (prefix % 8)
+  return new ipaddr.IPv6(bytes)
+  
 # A utility function to return broadcast address given the IPv4 interface and prefix length in CIDR notation
 ipaddr.IPv4.broadcastAddressFromCIDR = (string) ->
   try
