@@ -19,5 +19,6 @@
   "repository": "git://github.com/whitequark/ipaddr.js",
   "main": "./lib/ipaddr.js",
   "engines": { "node": ">= 0.10" },
-  "license": "MIT"
+  "license": "MIT",
+  "types": "./lib/ipaddr.js.d.ts"
 }
