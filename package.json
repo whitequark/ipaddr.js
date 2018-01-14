@@ -15,6 +15,10 @@
   "scripts": {
     "test": "cake build test"
   },
+  "files": [
+    "lib/",
+    "ipaddr.min.js"
+  ],
   "keywords": ["ip", "ipv4", "ipv6"],
   "repository": "git://github.com/whitequark/ipaddr.js",
   "main": "./lib/ipaddr.js",
