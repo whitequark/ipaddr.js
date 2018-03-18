@@ -513,6 +513,55 @@ ipaddr.IPv6.parseCIDR = (string) ->
 
   throw new Error "ipaddr: string is not formatted like an IPv6 CIDR range"
 
+# A utility function to return subnet mask in IPv6 format given the prefix length
+ipaddr.IPv6.subnetMaskFromPrefixLength = (prefix) ->
+  prefix = parseInt(prefix)
+  if prefix < 0 or prefix > 128
+    throw new Error('ipaddr: invalid IPv6 prefix length')
+  octets = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  j = 0
+  filledOctetCount = Math.floor(prefix / 8)
+  while j < filledOctetCount
+    octets[j] = 255
+    j++
+  if filledOctetCount < 16
+    octets[filledOctetCount] = Math.pow(2, (prefix % 8)) - 1 << 8 - (prefix % 8)
+  new @(octets)
+
+# A utility function to return broadcast address given the IPv6 interface and prefix length in CIDR notation
+ipaddr.IPv6.broadcastAddressFromCIDR = (string) ->
+  try
+    cidr = @parseCIDR(string)
+    ipInterfaceOctets = cidr[0].toByteArray()
+    subnetMaskOctets = @subnetMaskFromPrefixLength(cidr[1]).toByteArray()
+    octets = []
+    i = 0
+    while i < 16
+      # Broadcast address is bitwise OR between ip interface and inverted mask
+      octets.push parseInt(ipInterfaceOctets[i], 10) | parseInt(subnetMaskOctets[i], 10) ^ 255
+      i++
+    return new @(octets)
+  catch error
+    throw new Error('ipaddr: the address does not have IPv6 CIDR format')
+  return
+
+# A utility function to return network address given the IPv4 interface and prefix length in CIDR notation
+ipaddr.IPv6.networkAddressFromCIDR = (string) ->
+  try
+    cidr = @parseCIDR(string)
+    ipInterfaceOctets = cidr[0].toByteArray()
+    subnetMaskOctets = @subnetMaskFromPrefixLength(cidr[1]).toByteArray()
+    octets = []
+    i = 0
+    while i < 16
+      # Network address is bitwise AND between ip interface and mask
+      octets.push parseInt(ipInterfaceOctets[i], 10) & parseInt(subnetMaskOctets[i], 10)
+      i++
+    return new @(octets)
+  catch error
+    throw new Error('ipaddr: the address does not have IPv6 CIDR format (1)' + error)
+  return
+
 # Checks if the address is valid IP address
 ipaddr.isValid = (string) ->
   return ipaddr.IPv6.isValid(string) || ipaddr.IPv4.isValid(string)
