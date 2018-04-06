@@ -114,6 +114,13 @@ module.exports =
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('0xc0.168.1.1'), false)
       test.done()
 
+  'refuses to construct IPv4 address with trailing and leading zeros': (test) ->
+      test.equal(ipaddr.IPv4.isValidFourPartDecimal('000000192.168.100.2'), false)
+      test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.0000168.100.2'), false)
+      test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.168.100.00000002'), false)
+      test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.168.100.20000000'), false)
+      test.done() 
+
   'can construct IPv6 from 16bit parts': (test) ->
     test.doesNotThrow ->
       new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
