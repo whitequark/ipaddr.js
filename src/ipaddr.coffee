@@ -414,7 +414,7 @@ ipaddr.IPv4.isValid = (string) ->
     return false
 
 ipaddr.IPv4.isValidFourPartDecimal = (string) ->
-  if ipaddr.IPv4.isValid(string) and string.match(/^[1-9]\d*(\.[1-9]\d*){3}$/)
+  if ipaddr.IPv4.isValid(string) and string.match(/^(0|[1-9]\d*)(\.(0|[1-9]\d*)){3}$/)
     return true
   else
     return false
