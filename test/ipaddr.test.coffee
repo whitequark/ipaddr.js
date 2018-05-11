@@ -110,13 +110,13 @@ module.exports =
     test.done()
 
   'checks the conventional IPv4 address format': (test) ->
+      test.equal(ipaddr.IPv4.isValidFourPartDecimal('0.0.0.0'),  true)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('127.0.0.1'),  true)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.168.1.1'),  true)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('0xc0.168.1.1'), false)
       test.done()
 
   'refuses to construct IPv4 address with trailing and leading zeros': (test) ->
-      test.equal(ipaddr.IPv4.isValidFourPartDecimal('0.168.100.2'), false)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('000000192.168.100.2'), false)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.0000168.100.2'), false)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.168.100.00000002'), false)
