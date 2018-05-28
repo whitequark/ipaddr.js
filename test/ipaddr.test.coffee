@@ -74,6 +74,11 @@ module.exports =
     test.equal(addr.match(addr, 32), true)
     test.done()
 
+  'parses CIDR reversible': (test) ->
+    test.equal(ipaddr.parseCIDR("1.2.3.4/24").toString(), "1.2.3.4/24")
+    test.equal(ipaddr.parseCIDR("::1%zone/24").toString(), "::1%zone/24")
+    test.done()
+
   'parses IPv4 CIDR correctly': (test) ->
     addr = new ipaddr.IPv4([10, 5, 0, 1])
     test.equal(addr.match(ipaddr.IPv4.parseCIDR('0.0.0.0/0')),   true)
