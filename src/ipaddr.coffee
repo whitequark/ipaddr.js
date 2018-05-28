@@ -452,7 +452,11 @@ ipaddr.IPv4.parseCIDR = (string) ->
   if match = string.match(/^(.+)\/(\d+)$/)
     maskLength = parseInt(match[2])
     if maskLength >= 0 and maskLength <= 32
-      return [@parse(match[1]), maskLength]
+      parsed = [@parse(match[1]), maskLength]
+      Object.defineProperty(parsed, 'toString', {
+        value: () -> this.join('/'),
+      })
+      return parsed
 
   throw new Error "ipaddr: string is not formatted like an IPv4 CIDR range"
 
@@ -509,7 +513,11 @@ ipaddr.IPv6.parseCIDR = (string) ->
   if match = string.match(/^(.+)\/(\d+)$/)
     maskLength = parseInt(match[2])
     if maskLength >= 0 and maskLength <= 128
-      return [@parse(match[1]), maskLength]
+      parsed = [@parse(match[1]), maskLength]
+      Object.defineProperty(parsed, 'toString', {
+        value: () -> this.join('/'),
+      })
+      return parsed
 
   throw new Error "ipaddr: string is not formatted like an IPv6 CIDR range"
 
