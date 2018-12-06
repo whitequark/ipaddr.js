@@ -232,7 +232,7 @@ class ipaddr.IPv6
   # Returns the address in expanded format with all zeroes included, like
   # 2001:db8:8:66:0:0:0:1
   toNormalizedString: ->
-    addr = (part.toString(16) for part in @parts).join ":"
+    addr = (part.toString(16).padStart(4, '0') for part in @parts).join ":"
 
     suffix = ''
     if @zoneId
