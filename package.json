@@ -19,10 +19,16 @@
     "lib/",
     "ipaddr.min.js"
   ],
-  "keywords": ["ip", "ipv4", "ipv6"],
+  "keywords": [
+    "ip",
+    "ipv4",
+    "ipv6"
+  ],
   "repository": "git://github.com/whitequark/ipaddr.js",
   "main": "./lib/ipaddr.js",
-  "engines": { "node": ">= 0.10" },
+  "engines": {
+    "node": ">= 0.10"
+  },
   "license": "MIT",
   "types": "./lib/ipaddr.js.d.ts"
 }
