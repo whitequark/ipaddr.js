@@ -216,6 +216,8 @@ class ipaddr.IPv6
 
   # Returns the address in compact, human-readable format like
   # 2001:db8:8:66::1
+  #
+  # Deprecated: use toRFC5952String() instead.
   toString: ->
     # Replace the first sequence of 1 or more '0' parts with '::'
     return @toNormalizedString().replace( /((^|:)(0(:|$))+)/, '::' )
@@ -246,6 +248,8 @@ class ipaddr.IPv6
 
   # Returns the address in expanded format with all zeroes included, like
   # 2001:db8:8:66:0:0:0:1
+  #
+  # Deprecated: use toFixedLengthString() instead.
   toNormalizedString: ->
     addr = (part.toString(16) for part in @parts).join ":"
 
