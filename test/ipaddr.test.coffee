@@ -126,7 +126,7 @@ module.exports =
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.0000168.100.2'), false)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.168.100.00000002'), false)
       test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.168.100.20000000'), false)
-      test.done() 
+      test.done()
 
   'can construct IPv6 from 16bit parts': (test) ->
     test.doesNotThrow ->
@@ -152,6 +152,7 @@ module.exports =
   'converts IPv6 to string correctly': (test) ->
     addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
     test.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1')
+    test.equal(addr.toFixedLengthString(), '2001:0db8:f53a:0000:0000:0000:0000:0001')
     test.equal(addr.toString(), '2001:db8:f53a::1')
     test.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0, 0]).toString(), '::')
     test.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0, 1]).toString(), '::1')

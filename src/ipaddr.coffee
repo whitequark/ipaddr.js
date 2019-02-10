@@ -240,6 +240,17 @@ class ipaddr.IPv6
 
     return addr + suffix
 
+  # Returns the address in expanded format with all zeroes included, like
+  # 2001:0db8:0008:0066:0000:0000:0000:0001
+  toFixedLengthString: ->
+    addr = (part.toString(16).padStart(4, '0') for part in @parts).join ":"
+
+    suffix = ''
+    if @zoneId
+      suffix = '%' + @zoneId
+
+    return addr + suffix
+
   # Checks if this address matches other one within given CIDR range.
   match: (other, cidrRange) ->
     if cidrRange == undefined
