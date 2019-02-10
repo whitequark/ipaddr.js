@@ -216,9 +216,26 @@ class ipaddr.IPv6
 
   # Returns the address in compact, human-readable format like
   # 2001:db8:8:66::1
+  #
+  # Deprecated: use toRFC5952String() instead.
   toString: ->
     # Replace the first sequence of 1 or more '0' parts with '::'
     return @toNormalizedString().replace( /((^|:)(0(:|$))+)/, '::' )
+
+  # Returns the address in compact, human-readable format like
+  # 2001:db8:8:66::1
+  # in line with RFC 5952 (see https://tools.ietf.org/html/rfc5952#section-4)
+  toRFC5952String: ->
+    regex = /((^|:)(0(:|$)){2,})/g
+    string = @toNormalizedString()
+    bestMatchIndex = 0
+    bestMatchLength = -1
+    while (match = regex.exec(string))
+      if match[0].length > bestMatchLength
+        bestMatchIndex = match.index
+        bestMatchLength = match[0].length
+    return string if bestMatchLength < 0
+    return string.substring(0, bestMatchIndex) + '::' + string.substring(bestMatchIndex+bestMatchLength)
 
   # Returns an array of byte-sized values in network order (MSB first)
   toByteArray: ->
@@ -231,6 +248,8 @@ class ipaddr.IPv6
 
   # Returns the address in expanded format with all zeroes included, like
   # 2001:db8:8:66:0:0:0:1
+  #
+  # Deprecated: use toFixedLengthString() instead.
   toNormalizedString: ->
     addr = (part.toString(16) for part in @parts).join ":"
 

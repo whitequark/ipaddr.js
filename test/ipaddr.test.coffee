@@ -166,6 +166,30 @@ module.exports =
     test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0, 0, 0x456c, 0x78d]).toString(), '2001:db8:ff:abc::456c:78d')
     test.done()
 
+  'converts IPv6 to RFC 5952 string correctly': (test) ->
+    # see https://tools.ietf.org/html/rfc5952#section-4
+    addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
+    test.equal(addr.toRFC5952String(), '2001:db8:f53a::1')
+    test.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0, 0]).toRFC5952String(), '::')
+    test.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0, 1]).toRFC5952String(), '::1')
+    test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0, 0, 0, 0, 0, 0]).toRFC5952String(), '2001:db8::')
+    # longest set of zeroes gets collapsed (section 4.2.3)
+    test.equal(new ipaddr.IPv6([0, 0xff, 0, 0, 0, 0, 0, 0]).toRFC5952String(), '0:ff::')
+    test.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0xff, 0]).toRFC5952String(), '::ff:0')
+    test.equal(new ipaddr.IPv6([0, 0, 0xff, 0, 0, 0, 0, 0]).toRFC5952String(), '0:0:ff::')
+    test.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0xff, 0, 0]).toRFC5952String(), '::ff:0:0')
+
+    test.equal(new ipaddr.IPv6([0x2001, 0, 0, 0, 0xff, 0, 0, 0]).toRFC5952String(), '2001::ff:0:0:0')
+    test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0xdef, 0x123b, 0x456c, 0x78d]).toRFC5952String(), '2001:db8:ff:abc:def:123b:456c:78d')
+
+    # don't shorten single 0s (section 4.2.2)
+    test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0, 0x123b, 0x456c, 0x78d]).toRFC5952String(), '2001:db8:ff:abc:0:123b:456c:78d')
+    test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0x78d, 0x123b, 0x456c, 0]).toRFC5952String(), '2001:db8:ff:abc:78d:123b:456c:0')
+    test.equal(new ipaddr.IPv6([0, 0xdb8, 0xff, 0xabc, 0x78d, 0x123b, 0x456c, 0x2001]).toRFC5952String(), '0:db8:ff:abc:78d:123b:456c:2001')
+
+    test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0, 0, 0x456c, 0x78d]).toRFC5952String(), '2001:db8:ff:abc::456c:78d')
+    test.done()
+
   'returns IPv6 zoneIndex': (test) ->
     addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1], 'utun0')
     test.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1%utun0')
