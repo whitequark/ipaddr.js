@@ -9,8 +9,8 @@
   "dependencies": {},
   "devDependencies": {
     "coffee-script": "~1.12.6",
-    "uglify-js": "~3.0.19",
-    "nodeunit": ">=0.8.2 <0.8.7"
+    "nodeunit": "^0.11.3",
+    "uglify-js": "~3.0.19"
   },
   "scripts": {
     "test": "cake build test"
