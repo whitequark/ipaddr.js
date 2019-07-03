@@ -17,6 +17,7 @@
   },
   "files": [
     "lib/",
+    "LICENSE",
     "ipaddr.min.js"
   ],
   "keywords": [
