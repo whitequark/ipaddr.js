@@ -5,7 +5,7 @@
   "authors": [
     "whitequark <whitequark@whitequark.org>"
   ],
-  "description": "IP address manipulation library in JavaScript (CoffeeScript, actually)",
+  "description": "IP address manipulation library in JavaScript",
   "main": "lib/ipaddr.js",
   "moduleType": [
     "globals",
