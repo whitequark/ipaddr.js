@@ -8,7 +8,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "coffee-script": "~1.12.6",
     "nodeunit": "^0.11.3",
     "uglify-js": "~3.0.19"
   },
