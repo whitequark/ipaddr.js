@@ -8,12 +8,12 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "coffee-script": "~1.12.6",
     "nodeunit": "^0.11.3",
     "uglify-js": "~3.0.19"
   },
   "scripts": {
-    "test": "cake build test"
+    "build": "uglifyjs --compress --mangle --wrap=window -o ipaddr.min.js lib/ipaddr.js",
+    "test": "npm run build && nodeunit test"
   },
   "files": [
     "lib/",
