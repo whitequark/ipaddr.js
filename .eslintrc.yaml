@@ -1,0 +1,11 @@
+env:
+  es6: true
+  node: true
+  mocha: true
+
+root: true
+
+rules:
+  no-cond-assign: 1
+
+extends: ["eslint:recommended"]
