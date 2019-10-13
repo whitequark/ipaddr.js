@@ -25,7 +25,7 @@ ipaddr.js defines one object in the global scope: `ipaddr`. In CommonJS,
 it is exported from the module:
 
 ```js
-var ipaddr = require('ipaddr.js');
+const ipaddr = require('ipaddr.js');
 ```
 
 The API consists of several global methods and two classes: ipaddr.IPv6 and ipaddr.IPv4.
@@ -67,40 +67,34 @@ Note that this method:
  * returns a compact representation (when it is applicable)
 
 A `match(range, bits)` method can be used to check if the address falls into a
-certain CIDR range.
-Note that an address can be (obviously) matched only against an address of the same type.
+certain CIDR range. Note that an address can be (obviously) matched only against an address of the same type.
 
 For example:
 
 ```js
-var addr = ipaddr.parse("2001:db8:1234::1");
-var range = ipaddr.parse("2001:db8::");
+const addr  = ipaddr.parse("2001:db8:1234::1");
+const range = ipaddr.parse("2001:db8::");
 
 addr.match(range, 32); // => true
 ```
 
-Alternatively, `match` can also be called as `match([range, bits])`. In this way,
-it can be used together with the `parseCIDR(string)` method, which parses an IP
-address together with a CIDR range.
+Alternatively, `match` can also be called as `match([range, bits])`. In this way, it can be used together with the `parseCIDR(string)` method, which parses an IP address together with a CIDR range.
 
 For example:
 
 ```js
-var addr = ipaddr.parse("2001:db8:1234::1");
+const addr = ipaddr.parse("2001:db8:1234::1");
 
 addr.match(ipaddr.parseCIDR("2001:db8::/32")); // => true
 ```
 
-A `range()` method returns one of predefined names for several special ranges defined
-by IP protocols. The exact names (and their respective CIDR ranges) can be looked up
-in the source: [IPv6 ranges] and [IPv4 ranges]. Some common ones include `"unicast"`
-(the default one) and `"reserved"`.
+A `range()` method returns one of predefined names for several special ranges defined by IP protocols. The exact names (and their respective CIDR ranges) can be looked up in the source: [IPv6 ranges] and [IPv4 ranges]. Some common ones include `"unicast"` (the default one) and `"reserved"`.
 
 You can match against your own range list by using
 `ipaddr.subnetMatch(address, rangeList, defaultName)` method. It can work with a mix of IPv6 or IPv4 addresses, and accepts a name-to-subnet map as the range list. For example:
 
 ```js
-var rangeList = {
+const rangeList = {
   documentationOnly: [ ipaddr.parse('2001:db8::'), 32 ],
   tunnelProviders: [
     [ ipaddr.parse('2001:470::'), 32 ], // he.net
@@ -110,20 +104,16 @@ var rangeList = {
 ipaddr.subnetMatch(ipaddr.parse('2001:470:8:66::1'), rangeList, 'unknown'); // => "tunnelProviders"
 ```
 
-The addresses can be converted to their byte representation with `toByteArray()`.
-(Actually, JavaScript mostly does not know about byte buffers. They are emulated with
-arrays of numbers, each in range of 0..255.)
+The addresses can be converted to their byte representation with `toByteArray()`. (Actually, JavaScript mostly does not know about byte buffers. They are emulated with arrays of numbers, each in range of 0..255.)
 
 ```js
-var bytes = ipaddr.parse('2a00:1450:8007::68').toByteArray(); // ipv6.google.com
+const bytes = ipaddr.parse('2a00:1450:8007::68').toByteArray(); // ipv6.google.com
 bytes // => [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, <zeroes...>, 0x00, 0x68 ]
 ```
 
-The `ipaddr.IPv4` and `ipaddr.IPv6` objects have some methods defined, too. All of them
-have the same interface for both protocols, and are similar to global methods.
+The `ipaddr.IPv4` and `ipaddr.IPv6` objects have some methods defined, too. All of them have the same interface for both protocols, and are similar to global methods.
 
-`ipaddr.IPvX.isValid(string)` can be used to check if the string is a valid address
-for particular protocol, and `ipaddr.IPvX.parse(string)` is the error-throwing parser.
+`ipaddr.IPvX.isValid(string)` can be used to check if the string is a valid address for particular protocol, and `ipaddr.IPvX.parse(string)` is the error-throwing parser.
 
 `ipaddr.IPvX.isValid(string)` uses the same format for parsing as the POSIX `inet_ntoa` function, which accepts unusual formats like `0xc0.168.1.1` or `0x10000000`. The function `ipaddr.IPv4.isValidFourPartDecimal(string)` validates the IPv4 address and also ensures that it is written in four-part decimal format.
 
@@ -132,14 +122,12 @@ for particular protocol, and `ipaddr.IPvX.parse(string)` is the error-throwing p
 
 #### IPv6 properties
 
-Sometimes you will want to convert IPv6 not to a compact string representation (with
-the `::` substitution); the `toNormalizedString()` method will return an address where
-all zeroes are explicit.
+Sometimes you will want to convert IPv6 not to a compact string representation (with the `::` substitution); the `toNormalizedString()` method will return an address where all zeroes are explicit.
 
 For example:
 
 ```js
-var addr = ipaddr.parse("2001:0db8::0001");
+const addr = ipaddr.parse("2001:0db8::0001");
 addr.toString(); // => "2001:db8::1"
 addr.toNormalizedString(); // => "2001:db8:0:0:0:0:0:1"
 ```
@@ -150,14 +138,14 @@ one, and `toIPv4Address()` will return an IPv4 object address.
 To access the underlying binary representation of the address, use `addr.parts`.
 
 ```js
-var addr = ipaddr.parse("2001:db8:10::1234:DEAD");
+const addr = ipaddr.parse("2001:db8:10::1234:DEAD");
 addr.parts // => [0x2001, 0xdb8, 0x10, 0, 0, 0, 0x1234, 0xdead]
 ```
 
 A IPv6 zone index can be accessed via `addr.zoneId`:
 
 ```js
-var addr = ipaddr.parse("2001:db8::%eth0");
+const addr = ipaddr.parse("2001:db8::%eth0");
 addr.zoneId // => 'eth0'
 ```
 
@@ -168,7 +156,7 @@ addr.zoneId // => 'eth0'
 To access the underlying representation of the address, use `addr.octets`.
 
 ```js
-var addr = ipaddr.parse("192.168.1.1");
+const addr = ipaddr.parse("192.168.1.1");
 addr.octets // => [192, 168, 1, 1]
 ```
 
@@ -206,14 +194,14 @@ while for IPv6 it has to be an array of sixteen 8-bit values.
 
 For example:
 ```js
-var addr = ipaddr.fromByteArray([0x7f, 0, 0, 1]);
+const addr = ipaddr.fromByteArray([0x7f, 0, 0, 1]);
 addr.toString(); // => "127.0.0.1"
 ```
 
 or
 
 ```js
-var addr = ipaddr.fromByteArray([0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
+const addr = ipaddr.fromByteArray([0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1])
 addr.toString(); // => "2001:db8::1"
 ```
 
@@ -221,13 +209,13 @@ Both objects also offer a `toByteArray()` method, which returns an array in netw
 
 For example:
 ```js
-var addr = ipaddr.parse("127.0.0.1");
+const addr = ipaddr.parse("127.0.0.1");
 addr.toByteArray(); // => [0x7f, 0, 0, 1]
 ```
 
 or
 
 ```js
-var addr = ipaddr.parse("2001:db8::1");
+const addr = ipaddr.parse("2001:db8::1");
 addr.toByteArray(); // => [0x20, 1, 0xd, 0xb8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
 ```
