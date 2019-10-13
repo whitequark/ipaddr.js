@@ -6,6 +6,7 @@ env:
 root: true
 
 rules:
-  no-cond-assign: 1
+  no-var: 0
+  no-cond-assign: ["error", "except-parens"]
 
 extends: ["eslint:recommended"]
