@@ -30,20 +30,20 @@ describe('ipaddr', () => {
     })
 
     it('converts IPv4 to string correctly', (done) => {
-        var addr = new ipaddr.IPv4([192, 168, 1, 1]);
+        let addr = new ipaddr.IPv4([192, 168, 1, 1]);
         assert.equal(addr.toString(), '192.168.1.1');
         assert.equal(addr.toNormalizedString(), '192.168.1.1');
         done();
     })
 
     it('returns correct kind for IPv4', (done) => {
-        var addr = new ipaddr.IPv4([1, 2, 3, 4]);
+        let addr = new ipaddr.IPv4([1, 2, 3, 4]);
         assert.equal(addr.kind(), 'ipv4');
         done();
     })
 
     it('allows to access IPv4 octets', (done) => {
-        var addr = new ipaddr.IPv4([42, 0, 0, 0]);
+        let addr = new ipaddr.IPv4([42, 0, 0, 0]);
         assert.equal(addr.octets[0], 42);
         done();
     })
@@ -80,7 +80,7 @@ describe('ipaddr', () => {
     })
 
     it('matches IPv4 CIDR correctly', (done) => {
-        var addr = new ipaddr.IPv4([10, 5, 0, 1]);
+        let addr = new ipaddr.IPv4([10, 5, 0, 1]);
         assert.equal(addr.match(ipaddr.IPv4.parse('0.0.0.0'), 0), true);
         assert.equal(addr.match(ipaddr.IPv4.parse('11.0.0.0'), 8), false);
         assert.equal(addr.match(ipaddr.IPv4.parse('10.0.0.0'), 8), true);
@@ -101,7 +101,7 @@ describe('ipaddr', () => {
     })
 
     it('parses IPv4 CIDR correctly', (done) => {
-        var addr = new ipaddr.IPv4([10, 5, 0, 1]);
+        let addr = new ipaddr.IPv4([10, 5, 0, 1]);
         assert.equal(addr.match(ipaddr.IPv4.parseCIDR('0.0.0.0/0')), true);
         assert.equal(addr.match(ipaddr.IPv4.parseCIDR('11.0.0.0/8')), false);
         assert.equal(addr.match(ipaddr.IPv4.parseCIDR('10.0.0.0/8')), true);
@@ -188,7 +188,7 @@ describe('ipaddr', () => {
     })
 
     it('converts IPv6 to string correctly', (done) => {
-        var addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
+        let addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
         assert.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1');
         assert.equal(addr.toFixedLengthString(), '2001:0db8:f53a:0000:0000:0000:0000:0001');
         assert.equal(addr.toString(), '2001:db8:f53a::1');
@@ -207,7 +207,7 @@ describe('ipaddr', () => {
 
     it('converts IPv6 to RFC 5952 string correctly', (done) => {
         // see https://tools.ietf.org/html/rfc5952#section-4
-        var addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
+        let addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
         assert.equal(addr.toRFC5952String(), '2001:db8:f53a::1');
         assert.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0, 0]).toRFC5952String(), '::');
         assert.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0, 0, 1]).toRFC5952String(), '::1');
@@ -231,7 +231,7 @@ describe('ipaddr', () => {
     })
 
     it('returns IPv6 zoneIndex', (done) => {
-        var addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1], 'utun0');
+        let addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1], 'utun0');
         assert.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1%utun0');
         assert.equal(addr.toString(), '2001:db8:f53a::1%utun0');
 
@@ -252,7 +252,7 @@ describe('ipaddr', () => {
     })
 
     it('returns IPv6 zoneIndex for IPv4-mapped IPv6 addresses', (done) => {
-        var addr = ipaddr.parse('::ffff:192.168.1.1%eth0');
+        let addr = ipaddr.parse('::ffff:192.168.1.1%eth0');
         assert.equal(addr.toNormalizedString(), '0:0:0:0:0:ffff:c0a8:101%eth0');
         assert.equal(addr.toString(), '::ffff:c0a8:101%eth0');
 
@@ -273,13 +273,13 @@ describe('ipaddr', () => {
     })
 
     it('returns correct kind for IPv6', (done) => {
-        var addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
+        let addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
         assert.equal(addr.kind(), 'ipv6');
         done();
     })
 
     it('allows to access IPv6 address parts', (done) => {
-        var addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 42, 0, 1]);
+        let addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 42, 0, 1]);
         assert.equal(addr.parts[5], 42);
         done();
     })
@@ -333,7 +333,7 @@ describe('ipaddr', () => {
     })
 
     it('matches IPv6 CIDR correctly', (done) => {
-        var addr = ipaddr.IPv6.parse('2001:db8:f53a::1');
+        let addr = ipaddr.IPv6.parse('2001:db8:f53a::1');
         assert.equal(addr.match(ipaddr.IPv6.parse('::'), 0), true);
         assert.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53a::1:1'), 64), true);
         assert.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53b::1:1'), 48), false);
@@ -348,7 +348,7 @@ describe('ipaddr', () => {
     })
 
     it('parses IPv6 CIDR correctly', (done) => {
-        var addr = ipaddr.IPv6.parse('2001:db8:f53a::1');
+        let addr = ipaddr.IPv6.parse('2001:db8:f53a::1');
         assert.equal(addr.match(ipaddr.IPv6.parseCIDR('::/0')), true);
         assert.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f53a::1:1/64')), true);
         assert.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f53b::1:1/48')), false);
@@ -371,8 +371,8 @@ describe('ipaddr', () => {
     })
 
     it('converts between IPv4-mapped IPv6 addresses and IPv4 addresses', (done) => {
-        var addr = ipaddr.IPv4.parse('77.88.21.11');
-        var mapped = addr.toIPv4MappedAddress();
+        let addr = ipaddr.IPv4.parse('77.88.21.11');
+        let mapped = addr.toIPv4MappedAddress();
         assert.deepEqual(mapped.parts, [0, 0, 0, 0, 0, 0xffff, 0x4d58, 0x150b]);
         assert.deepEqual(mapped.toIPv4Address().octets, addr.octets);
         done();
@@ -486,19 +486,19 @@ describe('ipaddr', () => {
     })
 
     it('subnetMatch does not fail on IPv4 when looking for IPv6', (done) => {
-        var rangelist = { subnet6: ipaddr.parseCIDR('fe80::/64') };
+        let rangelist = { subnet6: ipaddr.parseCIDR('fe80::/64') };
         assert.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1, 2, 3, 4]), rangelist, false), false);
         done();
     })
 
     it('subnetMatch does not fail on IPv6 when looking for IPv4', (done) => {
-        var rangelist = { subnet4: ipaddr.parseCIDR('1.2.3.0/24') };
+        let rangelist = { subnet4: ipaddr.parseCIDR('1.2.3.0/24') };
         assert.equal(ipaddr.subnetMatch(new ipaddr.IPv6([0xfe80, 0, 0, 0, 0, 0, 0, 1]), rangelist, false), false);
         done();
     })
 
     it('subnetMatch can use a hybrid IPv4/IPv6 range list', (done) => {
-        var rangelist = { dual64: [ipaddr.parseCIDR('1.2.4.0/24'), ipaddr.parseCIDR('2001:1:2:3::/64')] };
+        let rangelist = { dual64: [ipaddr.parseCIDR('1.2.4.0/24'), ipaddr.parseCIDR('2001:1:2:3::/64')] };
         assert.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1, 2, 4, 1]), rangelist, false), 'dual64');
         assert.equal(ipaddr.subnetMatch(new ipaddr.IPv6([0x2001, 1, 2, 3, 0, 0, 0, 1]), rangelist, false), 'dual64');
         done();
