@@ -8,10 +8,13 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "eslint": "*",
     "mocha": "*",
     "uglify-js": "~3.0.19"
   },
   "scripts": {
+    "lint": "node node_modules/.bin/eslint lib test",
+    "lintfix": "node node_modules/.bin/eslint --fix lib test",
     "build": "uglifyjs --compress --mangle --wrap=window -o ipaddr.min.js lib/ipaddr.js",
     "test": "./node_modules/.bin/_mocha"
   },
