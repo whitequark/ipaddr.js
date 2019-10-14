@@ -61,6 +61,7 @@ declare module "ipaddr.js" {
             range(): IPv6Range;
             subnetMatch(rangeList: RangeList<IPv6>, defaultName?: string): string;
             toIPv4Address(): IPv4;
+            toRFC5952String(): string;
         }
     }
 
