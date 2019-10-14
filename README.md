@@ -19,6 +19,10 @@ or
 
 `bower install ipaddr.js`
 
+## Older Node support
+
+Use the latest 1.x release for versions of nodejs older than 8.
+
 ## API
 
 ipaddr.js defines one object in the global scope: `ipaddr`. In CommonJS,
