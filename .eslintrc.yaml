@@ -8,5 +8,9 @@ root: true
 rules:
   no-var: "error"
   no-cond-assign: ["error", "except-parens"]
+  no-trailing-spaces: ["error", { "skipBlankLines": false }]
+  no-empty: [ "error", { "allowEmptyCatch": true } ]
+  no-shadow: "error"
+  prefer-template: "warn"
 
 extends: ["eslint:recommended"]
