@@ -69,6 +69,7 @@ describe('ipaddr', () => {
         assert.deepEqual(ipaddr.IPv4.parse('0xc0a80101').octets, [192, 168, 1, 1]);
         assert.deepEqual(ipaddr.IPv4.parse('030052000401').octets, [192, 168, 1, 1]);
         assert.deepEqual(ipaddr.IPv4.parse('3232235777').octets, [192, 168, 1, 1]);
+        assert.deepEqual(ipaddr.IPv4.parse('127.1').octets, [127, 0, 0, 1]);
         done();
     })
 
@@ -76,6 +77,10 @@ describe('ipaddr', () => {
         assert.throws(() => {
             ipaddr.IPv4.parse('10.0.0.wtf');
         });
+        assert.throws(() => {
+            ipaddr.IPv4.parse('8.0x1ffffff');
+        });
+
         done();
     })
 
