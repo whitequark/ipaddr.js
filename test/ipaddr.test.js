@@ -42,6 +42,12 @@ describe('ipaddr', () => {
         done();
     })
 
+    it('type guard returns correct kind for IPv4', (done) => {
+        let addr = new ipaddr.IPv4([1, 2, 3, 4]);
+        assert.equal(ipaddr.isIPv4(addr), true);
+        done();
+    })
+
     it('allows to access IPv4 octets', (done) => {
         let addr = new ipaddr.IPv4([42, 0, 0, 0]);
         assert.equal(addr.octets[0], 42);
@@ -284,6 +290,12 @@ describe('ipaddr', () => {
     it('returns correct kind for IPv6', (done) => {
         let addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
         assert.equal(addr.kind(), 'ipv6');
+        done();
+    })
+
+    it('type guard returns correct kind for IPv6', (done) => {
+        let addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1]);
+        assert.equal(ipaddr.isIPv6(addr), true);
         done();
     })
 
