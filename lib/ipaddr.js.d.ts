@@ -22,6 +22,8 @@ declare module "ipaddr.js" {
         export function process(addr: string): IPv4 | IPv6;
         export function subnetMatch(addr: IPv4, rangeList: RangeList<IPv4>, defaultName?: string): string;
         export function subnetMatch(addr: IPv6, rangeList: RangeList<IPv6>, defaultName?: string): string;
+        export function isIPv4(addr: IPv4 | IPv6): addr is IPv4;
+        export function isIPv6(addr: IPv4 | IPv6): addr is IPv6;
 
         export class IPv4 extends IP {
             static broadcastAddressFromCIDR(addr: string): IPv4;
