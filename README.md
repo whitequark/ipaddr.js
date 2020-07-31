@@ -21,7 +21,8 @@ or
 
 ## Older Node support
 
-Use the latest 1.x release for versions of nodejs older than 8.
+Use 2.x release for nodejs versions 10+.
+Use the 1.x release for versions of nodejs older than 10.
 
 ## API
 
