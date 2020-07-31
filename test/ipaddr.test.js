@@ -138,6 +138,20 @@ describe('ipaddr', () => {
         done();
     })
 
+    it('parses abbreviated IPv4 CIDR correctly', (done) => {
+        assert.equal(ipaddr.IPv4.parseCIDR('8/8').toString(), '8.0.0.0/8');
+        assert.equal(ipaddr.IPv4.parseCIDR('8.0/8').toString(), '8.0.0.0/8');
+        assert.equal(ipaddr.IPv4.parseCIDR('8.0.0/8').toString(), '8.0.0.0/8');
+        assert.equal(ipaddr.IPv4.parseCIDR('8.0.0.0/8').toString(), '8.0.0.0/8');
+
+        assert.equal(ipaddr.IPv4.parseCIDR('254/7').toString(), '254.0.0.0/7');
+        assert.equal(ipaddr.IPv4.parseCIDR('1.2.3.4/32').toString(), '1.2.3.4/32');
+        assert.equal(ipaddr.IPv4.parseCIDR('1.2.3/24').toString(), '1.2.3.0/24');
+        assert.equal(ipaddr.IPv4.parseCIDR('1.2/16').toString(), '1.2.0.0/16');
+        assert.equal(ipaddr.IPv4.parseCIDR('1/8').toString(), '1.0.0.0/8');
+        done();
+    })
+
     it('detects reserved IPv4 networks', (done) => {
         assert.equal(ipaddr.IPv4.parse('0.0.0.0').range(), 'unspecified');
         assert.equal(ipaddr.IPv4.parse('0.1.0.0').range(), 'unspecified');
