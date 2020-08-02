@@ -1,6 +1,7 @@
 declare module "ipaddr.js" {
-    type IPv4Range = 'unicast' | 'unspecified' | 'broadcast' | 'multicast' | 'linkLocal' | 'loopback' | 'carrierGradeNat' | 'private' | 'reserved';
-    type IPv6Range = 'unicast' | 'unspecified' | 'linkLocal' | 'multicast' | 'loopback' | 'uniqueLocal' | 'ipv4Mapped' | 'rfc6145' | 'rfc6052' | '6to4' | 'teredo' | 'reserved';
+    type IPvXRangeDefaults = 'unicast' | 'unspecified' | 'multicast' | 'linkLocal' | 'loopback' | 'reserved';
+    type IPv4Range = IPvXRangeDefaults | 'broadcast' | 'carrierGradeNat' | 'private';
+    type IPv6Range = IPvXRangeDefaults | 'uniqueLocal' | 'ipv4Mapped' | 'rfc6145' | 'rfc6052' | '6to4' | 'teredo';
 
     interface RangeList<T> {
         [name: string]: [T, number] | [T, number][];
@@ -15,13 +16,12 @@ declare module "ipaddr.js" {
     }
 
     namespace Address {
-        export function isValid(addr: string): boolean;
         export function fromByteArray(bytes: number[]): IPv4 | IPv6;
+        export function isValid(addr: string): boolean;
         export function parse(addr: string): IPv4 | IPv6;
         export function parseCIDR(mask: string): [IPv4 | IPv6, number];
         export function process(addr: string): IPv4 | IPv6;
-        export function subnetMatch(addr: IPv4, rangeList: RangeList<IPv4>, defaultName?: string): string;
-        export function subnetMatch(addr: IPv6, rangeList: RangeList<IPv6>, defaultName?: string): string;
+        export function subnetMatch(addr: IPv4 | IPv6, rangeList: RangeList<IPv4 | IPv6>, defaultName?: string): string;
 
         export class IPv4 extends IP {
             static broadcastAddressFromCIDR(addr: string): IPv4;
@@ -36,8 +36,7 @@ declare module "ipaddr.js" {
             octets: number[]
 
             kind(): 'ipv4';
-            match(addr: IPv4, bits: number): boolean;
-            match(mask: [IPv4, number]): boolean;
+            match(what: IPv4 | IPv6 | [IPv4 | IPv6, number], bits?: number): boolean;
             range(): IPv4Range;
             subnetMatch(rangeList: RangeList<IPv4>, defaultName?: string): string;
             toIPv4MappedAddress(): IPv6;
@@ -56,8 +55,7 @@ declare module "ipaddr.js" {
 
             isIPv4MappedAddress(): boolean;
             kind(): 'ipv6';
-            match(addr: IPv6, bits: number): boolean;
-            match(mask: [IPv6, number]): boolean;
+            match(what: IPv4 | IPv6 | [IPv4 | IPv6, number], bits?: number): boolean;
             range(): IPv6Range;
             subnetMatch(rangeList: RangeList<IPv6>, defaultName?: string): string;
             toIPv4Address(): IPv4;
