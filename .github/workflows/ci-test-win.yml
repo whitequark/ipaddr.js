@@ -1,0 +1,35 @@
+name: CI Tests - Win
+
+on: [ push, pull_request ]
+
+jobs:
+
+  ci-test-win:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+        node-version: [12.x, 14.x]
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Code
+      with:
+        fetch-depth: 1
+
+    - uses: actions/setup-node@v1
+      name: Use Node.js ${{ matrix.node-version }}
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install
+      run: npm install
+
+    - name: Test
+      run: npm run test
+
+      env:
+        CI: true
