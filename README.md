@@ -1,6 +1,6 @@
 # ipaddr.js — an IPv6 and IPv4 address manipulation library
 
-[![Build Status](https://travis-ci.org/whitequark/ipaddr.js.svg)](https://travis-ci.org/whitequark/ipaddr.js)
+[![Build Status](https://github.com/whitequark/ipaddr.js/workflows/CI%20Tests/badge.svg)](https://github.com/whitequark/ipaddr.js/actions?query=workflow%3A%22CI+Tests%22)
 
 ipaddr.js is a small (1.9K minified and gzipped) library for manipulating
 IP addresses in JavaScript environments. It runs on both CommonJS runtimes
