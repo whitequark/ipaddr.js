@@ -638,4 +638,31 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv4.networkAddressFromCIDR('172.0.0.1/5'), '168.0.0.0');
         done();
     })
+
+    it('networkAddressFromCIDR returns correct IPv6 network address', (done) => {
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('::/0'),                  '::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db8:f53a::1:1/64'), '2001:db8:f53a::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db8:f53b::1:1/48'), '2001:db8:f53b::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db8:f531::1:1/44'), '2001:db8:f530::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db8:f500::1/40'),   '2001:db8:f500::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db8:f500::1%z/40'), '2001:db8:f500::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db9:f500::1/40'),   '2001:db9:f500::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db9:f500::1%z/40'), '2001:db9:f500::');
+        assert.equal(ipaddr.IPv6.networkAddressFromCIDR('2001:db8:f53a::1/128'),  '2001:db8:f53a::1');
+        done();
+    })
+
+    it('broadcastAddressFromCIDR returns correct IPv6 broadcast address', (done) => {
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('::/0'),                  'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db8:f53a::1:1/64'), '2001:db8:f53a::ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db8:f53b::1:1/48'), '2001:db8:f53b:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db8:f531::1:1/44'), '2001:db8:f53f:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db8:f500::1/40'),   '2001:db8:f5ff:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db8:f500::1%z/40'), '2001:db8:f5ff:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db9:f500::1/40'),   '2001:db9:f5ff:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db9:f500::1%z/40'), '2001:db9:f5ff:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.broadcastAddressFromCIDR('2001:db8:f53a::1/128'),  '2001:db8:f53a::1');
+        done();
+    })
+
 })
