@@ -46,6 +46,7 @@ declare module "ipaddr.js" {
             static broadcastAddressFromCIDR(addr: string): IPv6;
             static isIPv6(addr: string): boolean;
             static isValid(addr: string): boolean;
+            static networkAddressFromCIDR(addr: string): IPv6;
             static parse(addr: string): IPv6;
             static parseCIDR(addr: string): [IPv6, number];
             static subnetMaskFromPrefixLength(prefix: number): IPv6;
