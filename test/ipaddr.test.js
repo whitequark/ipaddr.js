@@ -627,6 +627,23 @@ describe('ipaddr', () => {
         done();
     })
 
+    it('subnetMaskFromPrefixLength returns correct IPv6 subnet mask given prefix length', (done) => {
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(128), 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(112), 'ffff:ffff:ffff:ffff:ffff:ffff:ffff::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(96),  'ffff:ffff:ffff:ffff:ffff:ffff::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(72),  'ffff:ffff:ffff:ffff:ff00::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(64),  'ffff:ffff:ffff:ffff::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(48),  'ffff:ffff:ffff::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(32),  'ffff:ffff::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(16),  'ffff::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(8),   'ff00::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(4),   'f000::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(2),   'c000::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(1),   '8000::');
+        assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(0),   '::');
+        done();
+    })
+
     it('broadcastAddressFromCIDR returns correct IPv4 broadcast address', (done) => {
         assert.equal(ipaddr.IPv4.broadcastAddressFromCIDR('172.0.0.1/24'), '172.0.0.255');
         assert.equal(ipaddr.IPv4.broadcastAddressFromCIDR('172.0.0.1/26'), '172.0.0.63');
