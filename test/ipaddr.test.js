@@ -415,6 +415,11 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.parse('64:ff9b::1234').range(), 'rfc6052');
         assert.equal(ipaddr.IPv6.parse('2002:1f63:45e8::1').range(), '6to4');
         assert.equal(ipaddr.IPv6.parse('2001::4242').range(), 'teredo');
+        assert.equal(ipaddr.IPv6.parse('2001:2::').range(), 'benchmarking');
+        assert.equal(ipaddr.IPv6.parse('2001:3::').range(), 'amt');
+        assert.equal(ipaddr.IPv6.parse('2001:4:112::').range(), 'as112v6');
+        assert.equal(ipaddr.IPv6.parse('2001:10::').range(), 'deprecated');
+        assert.equal(ipaddr.IPv6.parse('2001:20::').range(), 'orchid2');
         assert.equal(ipaddr.IPv6.parse('2001:db8::3210').range(), 'reserved');
         assert.equal(ipaddr.IPv6.parse('2001:470:8:66::1').range(), 'unicast');
         assert.equal(ipaddr.IPv6.parse('2001:470:8:66::1%z').range(), 'unicast');
