@@ -1,0 +1,33 @@
+name: Lint
+
+on: [ push, pull_request ]
+
+jobs:
+
+  lint:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 12.x ]
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Code
+      with:
+        fetch-depth: 1
+
+    - uses: actions/setup-node@v1
+      name: Use Node.js ${{ matrix.node-version }}
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install
+      run: npm install
+
+    - name: Lint
+      run: npm run lint
+
+      env:
+        CI: true
