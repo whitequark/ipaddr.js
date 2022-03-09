@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const { IPv6, IPv4 } = require('../lib/ipaddr');
 
 const ipaddr = require('../lib/ipaddr');
 
@@ -33,6 +34,11 @@ describe('ipaddr', () => {
         let addr = new ipaddr.IPv4([192, 168, 1, 1]);
         assert.equal(addr.toString(), '192.168.1.1');
         assert.equal(addr.toNormalizedString(), '192.168.1.1');
+        done();
+    })
+
+    it('converts IPv4 CIDR to string correctly', (done) => {
+        assert.equal(IPv4.parseCIDR('192.168.1.1/24').toString(), '192.168.1.1/24');
         done();
     })
 
@@ -217,6 +223,13 @@ describe('ipaddr', () => {
         assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0xdef, 0x123b, 0x456c, 0x78d]).toString(), '2001:db8:ff:abc:def:123b:456c:78d');
         assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0, 0x123b, 0x456c, 0x78d]).toString(), '2001:db8:ff:abc:0:123b:456c:78d');
         assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0, 0, 0x456c, 0x78d]).toString(), '2001:db8:ff:abc::456c:78d');
+        done();
+    })
+
+    it('converts IPv6 CIDR to string correctly', (done) => {
+        assert.equal(IPv6.parseCIDR('0:0:0:0:0:0:0:0/64').toString(), '::/64');
+        assert.equal(IPv6.parseCIDR('0:0:0:ff:ff:0:0:0/64').toString(), '::ff:ff:0:0:0/64');
+        assert.equal(IPv6.parseCIDR('2001:db8:ff:abc:def:123b:456c:78d/64').toString(), '2001:db8:ff:abc:def:123b:456c:78d/64');
         done();
     })
 
