@@ -1,7 +1,7 @@
 declare module "ipaddr.js" {
-    type IPvXRangeDefaults = 'unicast' | 'unspecified' | 'multicast' | 'linkLocal' | 'loopback' | 'reserved';
-    type IPv4Range = IPvXRangeDefaults | 'broadcast' | 'carrierGradeNat' | 'private';
-    type IPv6Range = IPvXRangeDefaults | 'uniqueLocal' | 'ipv4Mapped' | 'rfc6145' | 'rfc6052' | '6to4' | 'teredo';
+    type IPvXRangeDefaults = 'unicast' | 'unspecified' | 'multicast' | 'linkLocal' | 'loopback' | 'reserved' | 'benchmarking' | 'amt';
+    type IPv4Range = IPvXRangeDefaults | 'broadcast' | 'carrierGradeNat' | 'private' | 'as112';
+    type IPv6Range = IPvXRangeDefaults | 'uniqueLocal' | 'ipv4Mapped' | 'rfc6145' | 'rfc6052' | '6to4' | 'teredo' | 'as112v6' | 'orchid2' | 'droneRemoteIdProtocolEntityTags';
 
     interface RangeList<T> {
         [name: string]: [T, number] | [T, number][];

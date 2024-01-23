@@ -150,7 +150,9 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv4.parse('10.1.0.1').range(), 'private');
         assert.equal(ipaddr.IPv4.parse('100.64.0.0').range(), 'carrierGradeNat');
         assert.equal(ipaddr.IPv4.parse('100.127.255.255').range(), 'carrierGradeNat');
+        assert.equal(ipaddr.IPv4.parse('192.52.193.1').range(), 'amt');
         assert.equal(ipaddr.IPv4.parse('192.168.2.1').range(), 'private');
+        assert.equal(ipaddr.IPv4.parse('192.175.48.0').range(), 'as112');
         assert.equal(ipaddr.IPv4.parse('224.100.0.1').range(), 'multicast');
         assert.equal(ipaddr.IPv4.parse('169.254.15.0').range(), 'linkLocal');
         assert.equal(ipaddr.IPv4.parse('127.1.1.1').range(), 'loopback');
@@ -423,6 +425,7 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.parse('fe80::1234:5678:abcd:0123').range(), 'linkLocal');
         assert.equal(ipaddr.IPv6.parse('ff00::1234').range(), 'multicast');
         assert.equal(ipaddr.IPv6.parse('::1').range(), 'loopback');
+        assert.equal(ipaddr.IPv6.parse('100::42').range(), 'discard');
         assert.equal(ipaddr.IPv6.parse('fc00::').range(), 'uniqueLocal');
         assert.equal(ipaddr.IPv6.parse('::ffff:192.168.1.10').range(), 'ipv4Mapped');
         assert.equal(ipaddr.IPv6.parse('::ffff:0:192.168.1.10').range(), 'rfc6145');
@@ -432,8 +435,10 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.parse('2001:2::').range(), 'benchmarking');
         assert.equal(ipaddr.IPv6.parse('2001:3::').range(), 'amt');
         assert.equal(ipaddr.IPv6.parse('2001:4:112::').range(), 'as112v6');
+        assert.equal(ipaddr.IPv6.parse('2620:4f:8000::').range(), 'as112v6');
         assert.equal(ipaddr.IPv6.parse('2001:10::').range(), 'deprecated');
         assert.equal(ipaddr.IPv6.parse('2001:20::').range(), 'orchid2');
+        assert.equal(ipaddr.IPv6.parse('2001:30::').range(), 'droneRemoteIdProtocolEntityTags');
         assert.equal(ipaddr.IPv6.parse('2001:db8::3210').range(), 'reserved');
         assert.equal(ipaddr.IPv6.parse('2001:470:8:66::1').range(), 'unicast');
         assert.equal(ipaddr.IPv6.parse('2001:470:8:66::1%z').range(), 'unicast');
