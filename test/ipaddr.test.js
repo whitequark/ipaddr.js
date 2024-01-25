@@ -354,6 +354,8 @@ describe('ipaddr', () => {
         assert.deepEqual(ipaddr.IPv6.parse('2001:db8:F53A::').parts, [0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 0]);
         assert.deepEqual(ipaddr.IPv6.parse('::1').parts, [0, 0, 0, 0, 0, 0, 0, 1]);
         assert.deepEqual(ipaddr.IPv6.parse('::8.8.8.8').parts, [0, 0, 0, 0, 0, 0xffff, 2056, 2056]);
+        assert.deepEqual(ipaddr.IPv6.parse('FFFF::255.255.255.255').parts, [0xffff, 0, 0, 0, 0, 0, 0xffff, 0xffff]);
+        assert.deepEqual(ipaddr.IPv6.parse('64:ff9a::0.0.0.0').parts, [0x64, 0xff9a, 0, 0, 0, 0, 0, 0]);
         assert.deepEqual(ipaddr.IPv6.parse('::').parts, [0, 0, 0, 0, 0, 0, 0, 0]);
         assert.deepEqual(ipaddr.IPv6.parse('::%z').parts, [0, 0, 0, 0, 0, 0, 0, 0]);
         assert.deepEqual(ipaddr.IPv6.parse('::%z').zoneId, 'z');
