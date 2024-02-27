@@ -68,6 +68,14 @@ describe('ipaddr', () => {
         done();
     })
 
+    it('validates IPv4 addresses in CIDR notation', (done) => {
+        assert.equal(ipaddr.IPv4.isValidCIDR('192.168.1.1/24'), true);
+        assert.equal(ipaddr.IPv4.isValidCIDR('10.5.0.1'), false);
+        assert.equal(ipaddr.IPv4.isValidCIDR('0.0.0.0/-1'), false);
+        assert.equal(ipaddr.IPv4.isValidCIDR('192.168.1.1/999'), false);
+        done();
+    })
+
     it('parses IPv4 in several weird formats', (done) => {
         assert.deepEqual(ipaddr.IPv4.parse('192.168.1.1').octets, [192, 168, 1, 1]);
         assert.deepEqual(ipaddr.IPv4.parse('0xc0.168.1.1').octets, [192, 168, 1, 1]);
@@ -345,6 +353,20 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.isValid('::%z'), true);
 
         assert.equal(ipaddr.IPv6.isValid(undefined), false);
+        done();
+    })
+
+    it('validates IPv6 addresses in CIDR notation', (done) => {
+        assert.equal(ipaddr.IPv6.isValidCIDR('::/0'), true);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1%z/64'), true);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1/-1'), false);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1'), false);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1/129'), false);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1%z/129'), false);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1/64%z'), false);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1/64%'), false);
+        assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1/64%z/64'), false);
+        assert.equal(ipaddr.IPv6.isValidCIDR(undefined), false);
         done();
     })
 
