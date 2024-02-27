@@ -39,11 +39,15 @@ The API consists of several global methods and two classes: ipaddr.IPv6 and ipad
 
 ### Global methods
 
-There are three global methods defined: `ipaddr.isValid`, `ipaddr.parse` and
-`ipaddr.process`. All of them receive a string as a single parameter.
+There are four global methods defined: `ipaddr.isValid`, `ipaddr.isValidCIDR`, 
+`ipaddr.parse`, and `ipaddr.process`. All of them receive a string as a single
+parameter.
 
 The `ipaddr.isValid` method returns `true` if the address is a valid IPv4 or
 IPv6 address, and `false` otherwise. It does not throw any exceptions.
+
+The `ipaddr.isValidCIDR` method returns `true` if the address is a valid IPv4 or
+IPv6 address in CIDR notation, and `false` otherwise. It does not throw any exceptions.
 
 The `ipaddr.parse` method returns an object representing the IP address,
 or throws an `Error` if the passed string is not a valid representation of an

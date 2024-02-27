@@ -18,6 +18,7 @@ declare module "ipaddr.js" {
     namespace Address {
         export function fromByteArray(bytes: number[]): IPv4 | IPv6;
         export function isValid(addr: string): boolean;
+        export function isValidCIDR(addr: string): boolean;
         export function parse(addr: string): IPv4 | IPv6;
         export function parseCIDR(mask: string): [IPv4 | IPv6, number];
         export function process(addr: string): IPv4 | IPv6;
@@ -26,8 +27,9 @@ declare module "ipaddr.js" {
         export class IPv4 extends IP {
             static broadcastAddressFromCIDR(addr: string): IPv4;
             static isIPv4(addr: string): boolean;
-            static isValidFourPartDecimal(addr: string): boolean;
             static isValid(addr: string): boolean;
+            static isValidCIDR(addr: string): boolean;
+            static isValidFourPartDecimal(addr: string): boolean;
             static networkAddressFromCIDR(addr: string): IPv4;
             static parse(addr: string): IPv4;
             static parseCIDR(addr: string): [IPv4, number];
@@ -46,6 +48,7 @@ declare module "ipaddr.js" {
             static broadcastAddressFromCIDR(addr: string): IPv6;
             static isIPv6(addr: string): boolean;
             static isValid(addr: string): boolean;
+            static isValidCIDR(addr: string): boolean;
             static networkAddressFromCIDR(addr: string): IPv6;
             static parse(addr: string): IPv6;
             static parseCIDR(addr: string): [IPv6, number];
