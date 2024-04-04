@@ -2,34 +2,37 @@ name: CI Tests
 
 on: [ push, pull_request ]
 
+env:
+  CI: true
+
 jobs:
-
   ci-test:
-
+    needs: [get-lts]
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
-        node-version: [12.x, 14.x]
+        os: [ ubuntu-latest, windows-latest ]
+        node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v2
-      name: Checkout Code
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 1
 
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       name: Use Node.js ${{ matrix.node-version }}
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install
-      run: npm install
+    - run: npm install
+    - run: npm run test
 
-    - name: Test
-      run: npm run test
-
-      env:
-        CI: true
+  get-lts:
+    runs-on: ubuntu-latest
+    steps:
+      - id: get
+        uses: msimerson/node-lts-versions@v1
+    outputs:
+      active: ${{ steps.get.outputs.active }}
+      lts: ${{ steps.get.outputs.lts }}
