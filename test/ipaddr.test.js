@@ -1,9 +1,9 @@
 const assert = require('node:assert')
 const { describe, it } = require('node:test')
 
-const { IPv6, IPv4 } = require('./ipaddr');
+const { IPv6, IPv4 } = require('../lib/ipaddr');
 
-const ipaddr = require('./ipaddr');
+const ipaddr = require('../lib/ipaddr');
 
 describe('ipaddr', () => {
 
