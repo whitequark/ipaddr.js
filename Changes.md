@@ -1,3 +1,9 @@
+### 2.2.0 - 2024-04-20
+
+- add isValidCIDR method
+- fix parsing of some IPv4-embedded IPv6 adresses
+- add RFC7534, RFC7535, RFC7450, RFC6666, RFC5180, RFC7450 reserved address ranges
+
 ### 2.1.0 - 2023-05-23
 
 - un-deprecate IPv6.toString() and make it an alias to toRFC5952String()
