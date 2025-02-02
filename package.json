@@ -8,7 +8,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^8.57.0",
+    "eslint": "^9.19.0",
     "uglify-es": "*"
   },
   "scripts": {
