@@ -40,7 +40,7 @@ declare module "ipaddr.js" {
             kind(): 'ipv4';
             match(what: IPv4 | IPv6 | [IPv4 | IPv6, number], bits?: number): boolean;
             range(): IPv4Range;
-            subnetMatch<L extends RangeList<IPv4>, D extends string = "unicast">(rangeList: RangeList<IPv4>, defaultName?: D): keyof L | D;
+            subnetMatch<L extends RangeList<IPv4>, D extends string = "unicast">(rangeList: L, defaultName?: D): keyof L | D;
             toIPv4MappedAddress(): IPv6;
         }
 
