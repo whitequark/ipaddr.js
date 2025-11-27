@@ -160,6 +160,14 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv4.isValidFourPartDecimal('0xc0.168.1.1'), false);
     })
 
+    it('checks the conventional IPv4 CIDR format', () => {
+        assert.equal(ipaddr.IPv4.isValidCIDRFourPartDecimal('192.168.1.1/24'), true);
+        assert.equal(ipaddr.IPv4.isValidCIDRFourPartDecimal('0.0.0.0/0'), true);
+        assert.equal(ipaddr.IPv4.isValidCIDRFourPartDecimal('0xc0.168.1.1/24'), false);
+        assert.equal(ipaddr.IPv4.isValidCIDRFourPartDecimal('192.168.1.1/33'), false);
+        assert.equal(ipaddr.IPv4.isValidCIDRFourPartDecimal('192.168.1/24'), false);
+    })
+
     it('refuses to construct IPv4 address with trailing and leading zeros', () => {
         assert.equal(ipaddr.IPv4.isValidFourPartDecimal('000000192.168.100.2'), false);
         assert.equal(ipaddr.IPv4.isValidFourPartDecimal('192.0000168.100.2'), false);
