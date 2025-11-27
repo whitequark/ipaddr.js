@@ -30,6 +30,7 @@ declare module "ipaddr.js" {
             static isValid(addr: string): boolean;
             static isValidCIDR(addr: string): boolean;
             static isValidFourPartDecimal(addr: string): boolean;
+            static isValidCIDRFourPartDecimal(addr: string): boolean;
             static networkAddressFromCIDR(addr: string): IPv4;
             static parse(addr: string): IPv4;
             static parseCIDR(addr: string): [IPv4, number];
