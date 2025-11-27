@@ -1,3 +1,8 @@
+### 2.3.0 - 2025-11-27
+
+- add isValidCIDRFourPartDecimal helper for IPv4 CIDR in four-part decimal form
+- upgrade eslint dev dependency to v9
+- remove duplicated LICENSE entry from published files list
 ### 2.2.0 - 2024-04-20
 
 - add isValidCIDR method
