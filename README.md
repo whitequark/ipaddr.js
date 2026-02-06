@@ -56,7 +56,7 @@ IP address.
 The `ipaddr.process` method works just like the `ipaddr.parse` one, but it
 automatically converts IPv4-mapped IPv6 addresses to their IPv4 counterparts
 before returning. It is useful when you have a Node.js instance listening
-on an IPv6 socket, and the `net.ivp6.bindv6only` sysctl parameter (or its
+on an IPv6 socket, and the `net.ipv6.bindv6only` sysctl parameter (or its
 equivalent on non-Linux OS) is set to 0. In this case, you can accept IPv4
 connections on your IPv6-only socket, but the remote address will be mangled.
 Use `ipaddr.process` method to automatically demangle it.
