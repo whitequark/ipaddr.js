@@ -27,11 +27,17 @@
     "ipv6"
   ],
   "repository": "git://github.com/whitequark/ipaddr.js",
+  "exports": {
+    ".": {
+      "types": "./lib/ipaddr.js.d.ts",
+      "import": "./lib/ipaddr.js"
+    }
+  },
   "main": "./lib/ipaddr.js",
+  "types": "./lib/ipaddr.js.d.ts",
   "engines": {
     "node": ">= 10"
   },
   "license": "MIT",
-  "types": "./lib/ipaddr.js.d.ts",
   "type": "module"
 }
