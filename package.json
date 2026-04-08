@@ -26,7 +26,10 @@
     "ipv4",
     "ipv6"
   ],
-  "repository": "git://github.com/whitequark/ipaddr.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/whitequark/ipaddr.js"
+  },
   "exports": {
     ".": {
       "types": "./lib/ipaddr.js.d.ts",
