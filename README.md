@@ -17,10 +17,6 @@ and convert between IPv4 and IPv4-mapped IPv6 addresses.
 
 `npm install ipaddr.js`
 
-or
-
-`bower install ipaddr.js`
-
 ## Older Node support
 
 Use 2.x release for nodejs versions 10+.
