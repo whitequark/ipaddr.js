@@ -32,5 +32,6 @@
     "node": ">= 10"
   },
   "license": "MIT",
-  "types": "./lib/ipaddr.js.d.ts"
+  "types": "./lib/ipaddr.js.d.ts",
+  "type": "module"
 }
