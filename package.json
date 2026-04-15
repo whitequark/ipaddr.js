@@ -31,12 +31,12 @@
   },
   "exports": {
     ".": {
-      "types": "./lib/ipaddr.js.d.ts",
+      "types": "./lib/ipaddr.d.ts",
       "import": "./lib/ipaddr.js"
     }
   },
   "main": "./lib/ipaddr.js",
-  "types": "./lib/ipaddr.js.d.ts",
+  "types": "./lib/ipaddr.d.ts",
   "engines": {
     "node": ">= 10"
   },
