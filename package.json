@@ -11,8 +11,8 @@
     "eslint": "^9.19.0"
   },
   "scripts": {
-    "lint": "npx eslint lib",
-    "lintfix": "npx eslint --fix lib test",
+    "lint": "eslint lib",
+    "lintfix": "eslint --fix lib test",
     "build": "esbuild lib/ipaddr.js --bundle --minify --sourcemap --outfile=ipaddr.min.js",
     "test": "node --test"
   },
