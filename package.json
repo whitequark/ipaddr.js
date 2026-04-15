@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/whitequark/ipaddr.js"
+    "url": "git+https://github.com/whitequark/ipaddr.js.git"
   },
   "exports": {
     ".": {
