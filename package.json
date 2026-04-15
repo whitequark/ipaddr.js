@@ -6,15 +6,14 @@
   "directories": {
     "lib": "./lib"
   },
-  "dependencies": {},
   "devDependencies": {
-    "eslint": "^9.19.0",
-    "uglify-es": "*"
+    "esbuild": "^0.28.0",
+    "eslint": "^9.19.0"
   },
   "scripts": {
     "lint": "npx eslint lib",
     "lintfix": "npx eslint --fix lib test",
-    "build": "npx uglifyjs --compress --mangle --wrap=window -o ipaddr.min.js lib/ipaddr.js",
+    "build": "esbuild lib/ipaddr.js --bundle --minify --sourcemap --outfile=ipaddr.min.js",
     "test": "node --test"
   },
   "files": [
