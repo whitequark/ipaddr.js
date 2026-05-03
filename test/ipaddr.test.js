@@ -420,8 +420,10 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.parse('100::42').range(), 'discard');
         assert.equal(ipaddr.IPv6.parse('fc00::').range(), 'uniqueLocal');
         assert.equal(ipaddr.IPv6.parse('::ffff:192.168.1.10').range(), 'ipv4Mapped');
+        assert.equal(ipaddr.IPv6.parse('fec0::1234').range(), 'deprecatedSiteLocal');
         assert.equal(ipaddr.IPv6.parse('::ffff:0:192.168.1.10').range(), 'rfc6145');
         assert.equal(ipaddr.IPv6.parse('64:ff9b::1234').range(), 'rfc6052');
+        assert.equal(ipaddr.IPv6.parse('64:ff9b:1::1234').range(), 'rfc6052');
         assert.equal(ipaddr.IPv6.parse('2002:1f63:45e8::1').range(), '6to4');
         assert.equal(ipaddr.IPv6.parse('2001::4242').range(), 'teredo');
         assert.equal(ipaddr.IPv6.parse('2001:2::').range(), 'benchmarking');
@@ -434,6 +436,8 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.parse('2001:db8::3210').range(), 'reserved');
         assert.equal(ipaddr.IPv6.parse('2001:470:8:66::1').range(), 'unicast');
         assert.equal(ipaddr.IPv6.parse('2001:470:8:66::1%z').range(), 'unicast');
+        assert.equal(ipaddr.IPv6.parse('5f00::1').range(), 'segmentRouting');
+        assert.equal(ipaddr.IPv6.parse('3fff::1').range(), 'reserved');
     })
 
     it('is able to determine IP address type', () => {
