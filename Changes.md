@@ -1,13 +1,22 @@
+### 2.4.0 - 2026-05-03
+
+- remove Bower support
+- add RFC9637, RFC9602, RFC8215, RFC3879 reserved address ranges
+
+
 ### 2.3.0 - 2025-11-27
 
 - add isValidCIDRFourPartDecimal helper for IPv4 CIDR in four-part decimal form
 - upgrade eslint dev dependency to v9
 - remove duplicated LICENSE entry from published files list
+
+
 ### 2.2.0 - 2024-04-20
 
 - add isValidCIDR method
 - fix parsing of some IPv4-embedded IPv6 addresses
 - add RFC7534, RFC7535, RFC7450, RFC6666, RFC5180, RFC7450 reserved address ranges
+
 
 ### 2.1.0 - 2023-05-23
 
@@ -33,5 +42,6 @@
 - update README with es6 examples #125
 - replace nodeunit with mocha
 - rewrite in JS, drop CoffeeScript
+
 
 ### 1.9.1 - 2019-07-03
