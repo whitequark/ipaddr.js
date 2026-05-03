@@ -428,7 +428,7 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.parse('2001:3::').range(), 'amt');
         assert.equal(ipaddr.IPv6.parse('2001:4:112::').range(), 'as112v6');
         assert.equal(ipaddr.IPv6.parse('2620:4f:8000::').range(), 'as112v6');
-        assert.equal(ipaddr.IPv6.parse('2001:10::').range(), 'deprecated');
+        assert.equal(ipaddr.IPv6.parse('2001:10::').range(), 'deprecatedOrchid');
         assert.equal(ipaddr.IPv6.parse('2001:20::').range(), 'orchid2');
         assert.equal(ipaddr.IPv6.parse('2001:30::').range(), 'droneRemoteIdProtocolEntityTags');
         assert.equal(ipaddr.IPv6.parse('2001:db8::3210').range(), 'reserved');
