@@ -1,6 +1,7 @@
 {
   "name": "ipaddr.js",
   "description": "A library for manipulating IPv4 and IPv6 addresses in JavaScript.",
+  "type": "commonjs",
   "version": "2.4.0",
   "author": "whitequark <whitequark@whitequark.org>",
   "directories": {
@@ -26,7 +27,10 @@
     "ipv4",
     "ipv6"
   ],
-  "repository": "git://github.com/whitequark/ipaddr.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whitequark/ipaddr.js.git"
+  },
   "main": "./lib/ipaddr.js",
   "engines": {
     "node": ">= 10"
