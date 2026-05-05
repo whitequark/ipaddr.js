@@ -1,3 +1,7 @@
+### 3.3.0 - 2026-05-05
+
+- ESM-only, dropped CJS support
+
 ### 2.3.0 - 2025-11-27
 
 - add isValidCIDRFourPartDecimal helper for IPv4 CIDR in four-part decimal form
