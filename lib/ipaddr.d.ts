@@ -64,6 +64,3 @@ export class IPv6 extends IP {
     toIPv4Address(): IPv4;
     toRFC5952String(): string;
 }
-
-declare const ipaddr: typeof import('./ipaddr.js');
-export default ipaddr;
