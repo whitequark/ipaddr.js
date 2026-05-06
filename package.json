@@ -15,7 +15,8 @@
   "scripts": {
     "lint": "npx eslint lib",
     "lintfix": "npx eslint --fix lib test",
-    "test": "node --test"
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage"
   },
   "files": [
     "lib"
