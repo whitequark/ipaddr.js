@@ -1,9 +1,11 @@
 name: CI Tests
 
-on: [ push, pull_request ]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
-env:
-  CI: true
+permissions:
+  contents: read
 
 jobs:
   ci-test:
@@ -11,22 +13,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ubuntu-latest, windows-latest]
         node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
 
-    - uses: actions/setup-node@v4
-      name: Use Node.js ${{ matrix.node-version }}
-      with:
-        node-version: ${{ matrix.node-version }}
+      - uses: actions/setup-node@v6
+        name: Use Node.js ${{ matrix.node-version }}
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - run: npm install
-    - run: npm run test
+      - run: npm install
+      - run: npm run test
 
   get-lts:
     runs-on: ubuntu-latest
