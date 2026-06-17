@@ -216,6 +216,11 @@ describe('ipaddr', () => {
         assert.equal(new ipaddr.IPv6([0, 0, 0xff, 0, 0, 0, 0, 0]).toString(), '0:0:ff::');
         assert.equal(new ipaddr.IPv6([0, 0, 0, 0, 0, 0xff, 0, 0]).toString(), '::ff:0:0');
         assert.equal(new ipaddr.IPv6([0, 0, 0, 0xff, 0xff, 0, 0, 0]).toString(), '::ff:ff:0:0:0');
+        // RFC 5952, 4.2.3: on equal-length runs the leftmost is compressed,
+        // including when that run is at the start of the address.
+        assert.equal(new ipaddr.IPv6([0, 0, 0xff, 0xff, 0, 0, 0xff, 0xff]).toString(), '::ff:ff:0:0:ff:ff');
+        assert.equal(new ipaddr.IPv6([0, 0, 1, 0, 0, 1, 0, 0]).toString(), '::1:0:0:1:0:0');
+        assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0, 0, 1, 0, 0, 1]).toString(), '2001:db8::1:0:0:1');
         assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0xdef, 0x123b, 0x456c, 0x78d]).toString(), '2001:db8:ff:abc:def:123b:456c:78d');
         assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0, 0x123b, 0x456c, 0x78d]).toString(), '2001:db8:ff:abc:0:123b:456c:78d');
         assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0xff, 0xabc, 0, 0, 0x456c, 0x78d]).toString(), '2001:db8:ff:abc::456c:78d');
