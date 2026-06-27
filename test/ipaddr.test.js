@@ -339,6 +339,8 @@ describe('ipaddr', () => {
     it('rejects IPv6 parts longer than four hexadecimal digits', () => {
         assert.equal(ipaddr.IPv6.isValid('00000::1'), false);
         assert.throws(() => ipaddr.IPv6.parse('00000::1'));
+        assert.equal(ipaddr.IPv6.isValid('00000:0:0:0:0:0:1.2.3.4'), false);
+        assert.throws(() => ipaddr.IPv6.parse('00000:0:0:0:0:0:1.2.3.4'));
     })
 
     it('rejects compression of zero IPv6 parts', () => {
@@ -346,6 +348,11 @@ describe('ipaddr', () => {
         assert.throws(() => ipaddr.IPv6.parse('1:2:3:4:5:6:7:8::'));
         assert.equal(ipaddr.IPv6.isValid('::1:2:3:4:5:6:7:8'), false);
         assert.throws(() => ipaddr.IPv6.parse('::1:2:3:4:5:6:7:8'));
+    })
+
+    it('does not reject compression of exactly one IPv6 part', () => {
+        assert.equal(ipaddr.IPv6.isValid('1:2:3:4:5:6:7::'), true);
+        assert.equal(ipaddr.IPv6.isValid('::1:2:3:4:5:6:7'), true);
     })
 
     it('validates IPv6 addresses in CIDR notation', () => {
