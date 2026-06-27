@@ -336,6 +336,18 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.isValid(undefined), false);
     })
 
+    it('rejects IPv6 parts longer than four hexadecimal digits', () => {
+        assert.equal(ipaddr.IPv6.isValid('00000::1'), false);
+        assert.throws(() => ipaddr.IPv6.parse('00000::1'));
+    })
+
+    it('rejects compression of zero IPv6 parts', () => {
+        assert.equal(ipaddr.IPv6.isValid('1:2:3:4:5:6:7:8::'), false);
+        assert.throws(() => ipaddr.IPv6.parse('1:2:3:4:5:6:7:8::'));
+        assert.equal(ipaddr.IPv6.isValid('::1:2:3:4:5:6:7:8'), false);
+        assert.throws(() => ipaddr.IPv6.parse('::1:2:3:4:5:6:7:8'));
+    })
+
     it('validates IPv6 addresses in CIDR notation', () => {
         assert.equal(ipaddr.IPv6.isValidCIDR('::/0'), true);
         assert.equal(ipaddr.IPv6.isValidCIDR('2001:db8:F53A::1%z/64'), true);
