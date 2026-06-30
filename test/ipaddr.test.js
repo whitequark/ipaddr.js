@@ -668,6 +668,15 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.subnetMaskFromPrefixLength(0),   '::');
     })
 
+    it('subnetMaskFromPrefixLength throws on an out-of-range or non-numeric prefix length', () => {
+        assert.throws(() => ipaddr.IPv4.subnetMaskFromPrefixLength(-1));
+        assert.throws(() => ipaddr.IPv4.subnetMaskFromPrefixLength(33));
+        assert.throws(() => ipaddr.IPv4.subnetMaskFromPrefixLength('not a number'));
+        assert.throws(() => ipaddr.IPv6.subnetMaskFromPrefixLength(-1));
+        assert.throws(() => ipaddr.IPv6.subnetMaskFromPrefixLength(129));
+        assert.throws(() => ipaddr.IPv6.subnetMaskFromPrefixLength('not a number'));
+    })
+
     it('broadcastAddressFromCIDR returns correct IPv4 broadcast address', () => {
         assert.equal(ipaddr.IPv4.broadcastAddressFromCIDR('172.0.0.1/24'), '172.0.0.255');
         assert.equal(ipaddr.IPv4.broadcastAddressFromCIDR('172.0.0.1/26'), '172.0.0.63');
