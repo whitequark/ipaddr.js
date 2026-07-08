@@ -275,6 +275,15 @@ describe('ipaddr', () => {
         );
     })
 
+    it('compresses a trailing zero run when a zoneIndex is present', () => {
+        // The zone identifier (RFC 4007) is not part of the address and must
+        // not prevent zero-run compression at the end of it (RFC 5952, 4.2.2).
+        assert.equal(new ipaddr.IPv6([0xfe80, 0, 0, 0, 0, 0, 0, 0], 'eth0').toString(), 'fe80::%eth0');
+        assert.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0, 0, 0, 0, 0, 0], 'eth0').toRFC5952String(), '2001:db8::%eth0');
+        assert.equal(ipaddr.parse('fe80::%eth0').toString(), 'fe80::%eth0');
+        assert.equal(ipaddr.parse('::%eth0').toString(), '::%eth0');
+    })
+
     it('returns IPv6 zoneIndex for IPv4-mapped IPv6 addresses', () => {
         let addr = ipaddr.parse('::ffff:192.168.1.1%eth0');
         assert.equal(addr.toNormalizedString(), '0:0:0:0:0:ffff:c0a8:101%eth0');
