@@ -396,6 +396,12 @@ describe('ipaddr', () => {
         });
     })
 
+    it('throws a descriptive error when parsing a malformed IPv6 address', () => {
+        assert.throws(() => ipaddr.IPv6.parse('foobar'), /string is not formatted like an IPv6 Address/);
+        assert.throws(() => ipaddr.IPv6.parse('::ffff:999.1.1.1'), /string is not formatted like an IPv6 Address/);
+        assert.throws(() => ipaddr.IPv6.parse('1::2::3:1.2.3.4'), /string is not formatted like an IPv6 Address/);
+    })
+
     it('matches IPv6 CIDR correctly', () => {
         let addr = ipaddr.IPv6.parse('2001:db8:f53a::1');
         assert.equal(addr.match(ipaddr.IPv6.parse('::'), 0), true);
