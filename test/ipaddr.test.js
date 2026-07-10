@@ -459,6 +459,23 @@ describe('ipaddr', () => {
         assert.equal(ipaddr.IPv6.parse('100::42').range(), 'discard');
         assert.equal(ipaddr.IPv6.parse('fc00::').range(), 'uniqueLocal');
         assert.equal(ipaddr.IPv6.parse('::ffff:192.168.1.10').range(), 'ipv4Mapped');
+        // RFC4291 §2.5.5.1 IPv4-Compatible IPv6 addresses (::/96, excluding ::
+        // and ::1). Deprecated but must not be reported as plain unicast, since
+        // dual-stack hosts may route them to the embedded IPv4 destination. Note
+        // that IPv6.parse() rewrites dotted-quad forms ("::127.0.0.1") into the
+        // mapped form ("::ffff:7f00:1"); the realistic input shape for this
+        // range is therefore pure-hex, which is also what WHATWG URL parsers
+        // produce for the IPv4-compatible literal.
+        assert.equal(ipaddr.IPv6.parse('::7f00:1').range(), 'ipv4Compat');
+        assert.equal(ipaddr.IPv6.parse('0:0:0:0:0:0:7f00:1').range(), 'ipv4Compat');
+        assert.equal(ipaddr.IPv6.parse('::a00:1').range(), 'ipv4Compat');
+        assert.equal(ipaddr.IPv6.parse('::a9fe:a9fe').range(), 'ipv4Compat');
+        assert.equal(ipaddr.IPv6.parse('::808:808').range(), 'ipv4Compat');
+        // The more-specific ::/128 and ::1/128 ranges keep their existing labels.
+        // (Asserted above; restated here as a regression guard against the new
+        // ::/96 entry shadowing them.)
+        assert.equal(ipaddr.IPv6.parse('::').range(), 'unspecified');
+        assert.equal(ipaddr.IPv6.parse('::1').range(), 'loopback');
         assert.equal(ipaddr.IPv6.parse('fec0::1234').range(), 'deprecatedSiteLocal');
         assert.equal(ipaddr.IPv6.parse('::ffff:0:192.168.1.10').range(), 'rfc6145');
         assert.equal(ipaddr.IPv6.parse('64:ff9b::1234').range(), 'rfc6052');

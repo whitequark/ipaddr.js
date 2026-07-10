@@ -1,3 +1,8 @@
+### Unreleased
+
+- classify IPv4-Compatible IPv6 addresses (RFC4291 §2.5.5.1, `::/96` excluding `::` and `::1`) as `ipv4Compat` instead of `unicast`, so consumers using `range() !== 'unicast'` as an SSRF safety check block `::7f00:1`, `::a9fe:a9fe`, etc. — the pure-hex form that WHATWG URL parsers (`new URL('https://[::127.0.0.1]/').hostname` → `[::7f00:1]`) emit for IPv4-Compatible literals. The more-specific `::/128` and `::1/128` ranges retain their existing `unspecified` and `loopback` classifications.
+
+
 ### 2.4.0 - 2026-05-03
 
 - remove Bower support
