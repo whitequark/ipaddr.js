@@ -7,15 +7,16 @@
   "directories": {
     "lib": "./lib"
   },
-  "dependencies": {},
   "devDependencies": {
-    "eslint": "^9.19.0",
-    "uglify-es": "*"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0"
   },
   "scripts": {
     "lint": "npx eslint lib",
     "lintfix": "npx eslint --fix lib test",
-    "test": "node --test"
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage"
   },
   "files": [
     "lib/ipaddr.js",
@@ -35,7 +36,7 @@
     ".": "./lib/ipaddr.js"
   },
   "engines": {
-    "node": ">= 10"
+    "node": ">= 12"
   },
   "license": "MIT",
   "types": "./lib/ipaddr.d.ts"
