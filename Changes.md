@@ -1,3 +1,13 @@
+### 2.5.0 - 2026-08-04
+
+- remove `ipaddr.min.js`, end users must provide own minification/bundling
+- fix: compress the leftmost zero run in toString (RFC 5952, 4.2.3)
+- fix: strict IPv6 validation — reject :: with zero compression and hextets >4 hex digits
+- fix: reject non-numeric prefix length in subnetMaskFromPrefixLength
+- fix: compress trailing zero run in toString when a zoneIndex is present
+- fix: throw a descriptive error for malformed input in IPv6.parse
+
+
 ### 2.4.0 - 2026-05-03
 
 - remove Bower support
