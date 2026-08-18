@@ -14,6 +14,7 @@ npm install ipaddr.js
 
 ## Node.js version support
 
+- ipaddr.js 3.x — Node.js 12+
 - ipaddr.js 2.x — Node.js 10+
 - ipaddr.js 1.x — Node.js < 10
 
