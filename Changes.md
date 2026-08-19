@@ -1,8 +1,32 @@
+### 2.5.0 - 2026-08-04
+
+- remove `ipaddr.min.js`, end users must provide own minification/bundling
+- fix: compress the leftmost zero run in toString (RFC 5952, 4.2.3)
+- fix: strict IPv6 validation — reject :: with zero compression and hextets >4 hex digits
+- fix: reject non-numeric prefix length in subnetMaskFromPrefixLength
+- fix: compress trailing zero run in toString when a zoneIndex is present
+- fix: throw a descriptive error for malformed input in IPv6.parse
+
+
+### 2.4.0 - 2026-05-03
+
+- remove Bower support
+- add RFC9637, RFC9602, RFC8215, RFC3879 reserved address ranges
+
+
+### 2.3.0 - 2025-11-27
+
+- add isValidCIDRFourPartDecimal helper for IPv4 CIDR in four-part decimal form
+- upgrade eslint dev dependency to v9
+- remove duplicated LICENSE entry from published files list
+
+
 ### 2.2.0 - 2024-04-20
 
 - add isValidCIDR method
-- fix parsing of some IPv4-embedded IPv6 adresses
+- fix parsing of some IPv4-embedded IPv6 addresses
 - add RFC7534, RFC7535, RFC7450, RFC6666, RFC5180, RFC7450 reserved address ranges
+
 
 ### 2.1.0 - 2023-05-23
 
@@ -28,5 +52,6 @@
 - update README with es6 examples #125
 - replace nodeunit with mocha
 - rewrite in JS, drop CoffeeScript
+
 
 ### 1.9.1 - 2019-07-03
