@@ -20,7 +20,7 @@ export function isValidCIDR(addr: string): boolean;
 export function parse(addr: string): IPv4 | IPv6;
 export function parseCIDR(mask: string): [IPv4 | IPv6, number];
 export function process(addr: string): IPv4 | IPv6;
-export function subnetMatch(addr: IPv4 | IPv6, rangeList: RangeList<IPv4 | IPv6>, defaultName?: string): string;
+export function subnetMatch<L extends RangeList<IPv4 | IPv6>, D extends string = 'unicast'>(addr: IPv4 | IPv6, rangeList: L, defaultName?: D): keyof L | D;
 
 export class IPv4 extends IP {
     static broadcastAddressFromCIDR(addr: string): IPv4;
@@ -39,7 +39,7 @@ export class IPv4 extends IP {
     kind(): 'ipv4';
     match(what: IPv4 | IPv6 | [IPv4 | IPv6, number], bits?: number): boolean;
     range(): IPv4Range;
-    subnetMatch(rangeList: RangeList<IPv4>, defaultName?: string): string;
+    subnetMatch<L extends RangeList<IPv4>, D extends string = 'unicast'>(rangeList: L, defaultName?: D): keyof L | D;
     toIPv4MappedAddress(): IPv6;
 }
 
@@ -60,7 +60,7 @@ export class IPv6 extends IP {
     kind(): 'ipv6';
     match(what: IPv4 | IPv6 | [IPv4 | IPv6, number], bits?: number): boolean;
     range(): IPv6Range;
-    subnetMatch(rangeList: RangeList<IPv6>, defaultName?: string): string;
+    subnetMatch<L extends RangeList<IPv6>, D extends string = 'unicast'>(rangeList: L, defaultName?: D): keyof L | D;
     toIPv4Address(): IPv4;
     toRFC5952String(): string;
 }
