@@ -141,11 +141,11 @@ Each `rangeList` value is either a single `[address, prefixLength]` pair or an a
 ```js
 const rangeList = {
   private: [
-    [ipaddr.parse('10.0.0.0'), 8],
-    [ipaddr.parse('172.16.0.0'), 12],
-    [ipaddr.parse('192.168.0.0'), 16],
+    ipaddr.parseCIDR('10.0.0.0/8'),
+    ipaddr.parseCIDR('172.16.0.0/12'),
+    ipaddr.parseCIDR('192.168.0.0/16'),
   ],
-  loopback: [ ipaddr.parse('127.0.0.0'), 8 ],
+  loopback: ipaddr.parseCIDR('127.0.0.0/8'),
 };
 
 ipaddr.subnetMatch(ipaddr.parse('192.168.1.1'), rangeList);          // => 'private'
@@ -153,6 +153,11 @@ ipaddr.subnetMatch(ipaddr.parse('127.0.0.1'), rangeList);            // => 'loop
 ipaddr.subnetMatch(ipaddr.parse('8.8.8.8'), rangeList, 'public');    // => 'public'
 ipaddr.subnetMatch(ipaddr.parse('8.8.8.8'), rangeList);              // => 'unicast'
 ```
+
+Using `parseCIDR()` also preserves the `[address, prefixLength]` tuple type in
+TypeScript. Without a type annotation, a separately declared array literal such
+as `[ipaddr.parse('127.0.0.0'), 8]` is inferred as a general array, which cannot be
+passed as a CIDR tuple. The example above works in both JavaScript and TypeScript.
 
 <a name="ipaddrFromByteArray"></a>
 ### `ipaddr.fromByteArray(bytes)`
