@@ -501,6 +501,7 @@ describe('ipaddr', () => {
         equal(IPv6.parse('2001:470:8:66::1%z').range(), 'unicast');
         equal(IPv6.parse('5f00::1').range(), 'segmentRouting');
         equal(IPv6.parse('3fff::1').range(), 'reserved');
+        equal(IPv6.parse('100:0:0:1::1').range(), 'reserved');
     })
 
     it('is able to determine IP address type', () => {
