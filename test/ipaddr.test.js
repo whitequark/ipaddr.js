@@ -299,6 +299,18 @@ describe('ipaddr', () => {
         );
     })
 
+    it('accepts zone IDs with the other RFC 6874 unreserved characters', () => {
+        equal(parse('fe80::1%eth0.100').toString(), 'fe80::1%eth0.100');
+        equal(parse('fe80::1%br-lan').zoneId, 'br-lan');
+        equal(parse('fe80::1%en_0').zoneId, 'en_0');
+        equal(parse('fe80::1%a~b').zoneId, 'a~b');
+        equal(parse('::ffff:192.168.1.1%eth0.100').toString(), '::ffff:c0a8:101%eth0.100');
+        equal(parseCIDR('fe80::1%eth0.100/64').toString(), 'fe80::1%eth0.100/64');
+        equal(IPv6.isValid('fe80::1%eth0.100'), true);
+        equal(IPv6.isValid('fe80::1%eth 0'), false);
+        equal(IPv6.isValid('fe80::1%'), false);
+    })
+
     it('compresses a trailing zero run when a zoneIndex is present', () => {
         // The zone identifier (RFC 4007) is not part of the address and must
         // not prevent zero-run compression at the end of it (RFC 5952, 4.2.2).
