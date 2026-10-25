@@ -1,6 +1,6 @@
 export type IPvXRangeDefaults = 'unicast' | 'unspecified' | 'multicast' | 'linkLocal' | 'loopback' | 'reserved' | 'benchmarking' | 'amt';
 export type IPv4Range = IPvXRangeDefaults | 'broadcast' | 'carrierGradeNat' | 'private' | 'as112';
-export type IPv6Range = IPvXRangeDefaults | 'uniqueLocal' | 'ipv4Mapped' | 'rfc6145' | 'rfc6052' | '6to4' | 'teredo' | 'as112v6' | 'orchid2' | 'droneRemoteIdProtocolEntityTags';
+export type IPv6Range = IPvXRangeDefaults | 'uniqueLocal' | 'ipv4Mapped' | 'deprecatedSiteLocal' | 'discard' | 'rfc6145' | 'rfc6052' | '6to4' | 'teredo' | 'as112v6' | 'deprecatedOrchid' | 'orchid2' | 'droneRemoteIdProtocolEntityTags' | 'segmentRouting';
 
 export interface RangeList<T> {
     [name: string]: [T, number] | [T, number][];
