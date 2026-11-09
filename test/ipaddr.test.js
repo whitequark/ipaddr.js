@@ -418,12 +418,31 @@ describe('ipaddr', () => {
         deepEqual(IPv6.parse('fe80::10').parts, [0xfe80, 0, 0, 0, 0, 0, 0, 0x10]);
         deepEqual(IPv6.parse('2001:db8:F53A::').parts, [0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 0]);
         deepEqual(IPv6.parse('::1').parts, [0, 0, 0, 0, 0, 0, 0, 1]);
-        deepEqual(IPv6.parse('::8.8.8.8').parts, [0, 0, 0, 0, 0, 0xffff, 2056, 2056]);
+        deepEqual(IPv6.parse('::8.8.8.8').parts, [0, 0, 0, 0, 0, 0, 2056, 2056]);
         deepEqual(IPv6.parse('FFFF::255.255.255.255').parts, [0xffff, 0, 0, 0, 0, 0, 0xffff, 0xffff]);
         deepEqual(IPv6.parse('64:ff9a::0.0.0.0').parts, [0x64, 0xff9a, 0, 0, 0, 0, 0, 0]);
         deepEqual(IPv6.parse('::').parts, [0, 0, 0, 0, 0, 0, 0, 0]);
         deepEqual(IPv6.parse('::%z').parts, [0, 0, 0, 0, 0, 0, 0, 0]);
         deepEqual(IPv6.parse('::%z').zoneId, 'z');
+    })
+
+    it('keeps IPv4-compatible addresses distinct from IPv4-mapped ones', () => {
+        // RFC 4291 section 2.2 form 3: "::13.1.68.3" is 0:0:0:0:0:0:13.1.68.3,
+        // while "::FFFF:129.144.52.38" is the IPv4-mapped form. The two spell
+        // different addresses and must not collapse into each other.
+        const compat = IPv6.parse('::13.1.68.3');
+        deepEqual(compat.parts, [0, 0, 0, 0, 0, 0, 0x0d01, 0x4403]);
+        deepEqual(compat.toByteArray(), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 1, 68, 3]);
+        equal(compat.toString(), '::d01:4403');
+        equal(compat.isIPv4MappedAddress(), false);
+        equal(IPv6.parse('0:0:0:0:0:0:13.1.68.3').toString(), compat.toString());
+        equal(IPv6.parse('::1.2.3.4%z').toString(), '::102:304%z');
+        equal(IPv6.parse('::1.2.3.4%z').zoneId, 'z');
+        equal(process('::1.2.3.4').kind(), 'ipv6');
+        equal(process('::1.2.3.4').toString(), '::102:304');
+        // the mapped form is unchanged
+        deepEqual(IPv6.parse('::ffff:13.1.68.3').parts, [0, 0, 0, 0, 0, 0xffff, 0x0d01, 0x4403]);
+        equal(process('::ffff:13.1.68.3').toString(), '13.1.68.3');
     })
 
     it('barfs at invalid IPv6', () => {
@@ -533,7 +552,8 @@ describe('ipaddr', () => {
         equal(process('2001:db8:3312::1').kind(), 'ipv6');
         equal(process('::ffff:192.168.1.1').kind(), 'ipv4');
         equal(process('::ffff:192.168.1.1%z').kind(), 'ipv4');
-        equal(process('::8.8.8.8').kind(), 'ipv4');
+        equal(process('::8.8.8.8').kind(), 'ipv6');
+        equal(process('::8.8.8.8').toString(), process('::808:808').toString());
     })
 
     it('correctly converts IPv6 and IPv4 addresses to byte arrays', () => {
