@@ -10,13 +10,15 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.3.0",
-    "globals": "^17.6.0"
+    "globals": "^17.6.0",
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "lint": "npx eslint lib",
     "lintfix": "npx eslint --fix lib test",
     "test": "node --test",
-    "test:coverage": "node --test --experimental-test-coverage"
+    "test:coverage": "node --test --experimental-test-coverage",
+    "test:types": "node typecheck/generate.js && tsc -p typecheck"
   },
   "files": [
     "lib/ipaddr.js",
