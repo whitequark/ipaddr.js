@@ -61,6 +61,7 @@ export class IPv6 extends IP {
     match(what: IPv4 | IPv6 | [IPv4 | IPv6, number], bits?: number): boolean;
     range(): IPv6Range;
     subnetMatch<L extends RangeList<IPv6>, D extends string = 'unicast'>(rangeList: L, defaultName?: D): keyof L | D;
+    toFixedLengthString(): string;
     toIPv4Address(): IPv4;
     toRFC5952String(): string;
 }
