@@ -47,8 +47,15 @@ describe('ipaddr', () => {
 
     it('checks IPv4 address format', () => {
         equal(IPv4.isIPv4('192.168.007.0xa'), true);
-        equal(IPv4.isIPv4('1024.0.0.1'), true);
+        equal(IPv4.isIPv4('1024.0.0.1'), false);
         equal(IPv4.isIPv4('8.0xa.wtf.6'), false);
+    })
+
+    it('checks IPv4 address values without throwing', () => {
+        for (const string of ['08.0.0.1', '4294967296', '10.0x1000000', '10.0.0x10000', '256.0.0.1']) {
+            equal(IPv4.isIPv4(string), false);
+            equal(IPv4.isIPv4(string), IPv4.isValid(string));
+        }
     })
 
     it('validates IPv4 addresses', () => {

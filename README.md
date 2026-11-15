@@ -227,11 +227,12 @@ ipaddr.IPv4.isValidCIDRFourPartDecimal('0xc0.168.0.0/24'); // => false
 <a name="ipv4-isipv4"></a>
 #### `ipaddr.IPv4.isIPv4(string)`
 
-Returns `true` if the string matches the IPv4 address pattern. This is a lightweight regex check — it does not validate that all octets are in range (0–255). Prefer `isValid()` for authoritative validation.
+Same as [`isValid()`](#ipv4-isvalid): returns `true` if the string is a valid IPv4 address, with every part in range.
 
 ```js
 ipaddr.IPv4.isIPv4('192.168.1.1'); // => true
 ipaddr.IPv4.isIPv4('2001:db8::1'); // => false
+ipaddr.IPv4.isIPv4('999.0.0.1');   // => false
 ```
 
 <a name="ipv4-parse"></a>
