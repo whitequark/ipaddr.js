@@ -370,7 +370,7 @@ describe('ipaddr', () => {
 
     it('checks IPv6 address format', () => {
         equal(IPv6.isIPv6('2001:db8:F53A::1'), true);
-        equal(IPv6.isIPv6('200001::1'), true);
+        equal(IPv6.isIPv6('200001::1'), false);
         equal(IPv6.isIPv6('::ffff:192.168.1.1'), true);
         equal(IPv6.isIPv6('::ffff:192.168.1.1%z'), true);
         equal(IPv6.isIPv6('::10.2.3.4'), true);
@@ -379,6 +379,13 @@ describe('ipaddr', () => {
         equal(IPv6.isIPv6('::ffff:300.168.1.1:0'), false);
         equal(IPv6.isIPv6('fe80::wtf'), false);
         equal(IPv6.isIPv6('fe80::%'), false);
+    })
+
+    it('checks IPv6 address values without throwing', () => {
+        for (const string of ['200001::1', '1:2:3:4:5:6:7:10000', '::ffff:1.2.3.256', '1::2::3', ':::1']) {
+            equal(IPv6.isIPv6(string), false);
+            equal(IPv6.isIPv6(string), IPv6.isValid(string));
+        }
     })
 
     it('validates IPv6 addresses', () => {

@@ -426,11 +426,12 @@ ipaddr.IPv6.isValidCIDR('2001:db8::/129'); // => false
 <a name="ipv6-isipv6"></a>
 #### `ipaddr.IPv6.isIPv6(string)`
 
-Returns `true` if the string matches the IPv6 address pattern. This is a lightweight regex check and does not fully validate all groups. Prefer `isValid()` for authoritative validation.
+Same as [`isValid()`](#ipv6-isvalid): returns `true` if the string is a valid IPv6 address, with every part in range.
 
 ```js
 ipaddr.IPv6.isIPv6('2001:db8::1'); // => true
 ipaddr.IPv6.isIPv6('192.168.1.1'); // => false
+ipaddr.IPv6.isIPv6('200001::1');   // => false
 ```
 
 <a name="ipv6-parse"></a>
