@@ -1,7 +1,7 @@
 import { ok, doesNotThrow, throws, equal, deepEqual } from 'node:assert';
 import { describe, it } from 'node:test';
 
-import { IPv4, IPv6, parseCIDR, parse, process, isValid, subnetMatch, fromByteArray } from '../lib/ipaddr.js';
+import { IPv4, IPv6, parseCIDR, parse, process, isValid, subnetMatch, subnetContains, fromByteArray } from '../lib/ipaddr.js';
 
 describe('ipaddr', () => {
 
@@ -609,6 +609,48 @@ describe('ipaddr', () => {
     it('does not hang on ::8:8:8:8:8:8:8:8:8', () => {
         equal(IPv6.isValid('::8:8:8:8:8:8:8:8:8'), false);
         equal(IPv6.isValid('::8:8:8:8:8:8:8:8:8%z'), false);
+    })
+
+    it('subnetContains checks if an IPv4 range is inside another', () => {
+        const outer = parseCIDR('10.4.0.0/16');
+        equal(subnetContains(outer, parseCIDR('10.4.5.0/24')), true);
+        equal(subnetContains(outer, parseCIDR('10.4.255.255/32')), true);
+        equal(subnetContains(outer, parseCIDR('10.4.0.0/16')), true);
+        equal(subnetContains(outer, parseCIDR('10.5.0.0/24')), false);
+        equal(subnetContains(outer, parseCIDR('10.0.0.0/8')), false);
+        equal(subnetContains(parseCIDR('10.4.5.0/24'), outer), false);
+        equal(subnetContains(parseCIDR('0.0.0.0/0'), parseCIDR('203.0.113.7/32')), true);
+        // host bits in the outer range are ignored, like in match()
+        equal(subnetContains(parseCIDR('10.4.5.6/16'), parseCIDR('10.4.200.0/24')), true);
+    })
+
+    it('subnetContains checks if an IPv6 range is inside another', () => {
+        const outer = parseCIDR('2001:db8::/32');
+        equal(subnetContains(outer, parseCIDR('2001:db8:1::/64')), true);
+        equal(subnetContains(outer, parseCIDR('2001:db8::1/128')), true);
+        equal(subnetContains(outer, parseCIDR('2001:db9::/48')), false);
+        equal(subnetContains(outer, parseCIDR('2001::/16')), false);
+        equal(subnetContains(parseCIDR('::/0'), parseCIDR('fe80::/10')), true);
+    })
+
+    it('subnetContains returns false for different address families', () => {
+        equal(subnetContains(parseCIDR('0.0.0.0/0'), parseCIDR('::/0')), false);
+        equal(subnetContains(parseCIDR('::/0'), parseCIDR('10.0.0.0/8')), false);
+        equal(subnetContains(parseCIDR('::ffff:0:0/96'), parseCIDR('10.0.0.0/8')), false);
+    })
+
+    it('subnetContains rejects invalid CIDR prefix lengths', () => {
+        const v4 = IPv4.parse('10.0.0.0');
+        const v6 = IPv6.parse('2001:db8::');
+
+        throws(() => subnetContains([v4, 33], [v4, 32]));
+        throws(() => subnetContains([v4, -1], [v4, 24]));
+        throws(() => subnetContains([v4, 8], [v4, 33]));
+        throws(() => subnetContains([v4, 8], [v4, -1]));
+        throws(() => subnetContains([v4, 8], [v4, 1.5]));
+        equal(subnetContains([v4, 24], [v4, 8]), false);
+        throws(() => subnetContains([v6, 129], [v6, 128]));
+        throws(() => subnetContains([v6, 32], [v6, 129]));
     })
 
     it('subnetMatch does not fail on empty range', () => {
