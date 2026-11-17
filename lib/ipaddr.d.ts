@@ -20,6 +20,7 @@ export function isValidCIDR(addr: string): boolean;
 export function parse(addr: string): IPv4 | IPv6;
 export function parseCIDR(mask: string): [IPv4 | IPv6, number];
 export function process(addr: string): IPv4 | IPv6;
+export function subnetContains(outer: [IPv4 | IPv6, number], inner: [IPv4 | IPv6, number]): boolean;
 export function subnetMatch<L extends RangeList<IPv4 | IPv6>, D extends string = 'unicast'>(addr: IPv4 | IPv6, rangeList: L, defaultName?: D): keyof L | D;
 
 export class IPv4 extends IP {

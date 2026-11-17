@@ -45,6 +45,7 @@ prefix;             // => 8
   - [parseCIDR](#ipaddrParseCIDR)
   - [process](#ipaddrProcess)
   - [subnetMatch](#ipaddrSubnetMatch)
+  - [subnetContains](#ipaddrSubnetContains)
   - [fromByteArray](#ipaddrFromByteArray)
 - [IPv4 API](#ipv4-api)
   - Static: [isValid](#ipv4-isvalid), [isValidCIDR](#ipv4-isvalidcidr), [isValidFourPartDecimal](#ipv4-isvalidfourpartdecimal), [isValidCIDRFourPartDecimal](#ipv4-isvalidcidrfourpartdecimal), [isIPv4](#ipv4-isipv4), [parse](#ipv4-parse), [parseCIDR](#ipv4-parsecidr), [broadcastAddressFromCIDR](#ipv4-broadcastaddressfromcidr), [networkAddressFromCIDR](#ipv4-networkaddressfromcidr), [subnetMaskFromPrefixLength](#ipv4-subnetmaskfromprefixlength)
@@ -158,6 +159,20 @@ Using `parseCIDR()` also preserves the `[address, prefixLength]` tuple type in
 TypeScript. Without a type annotation, a separately declared array literal such
 as `[ipaddr.parse('127.0.0.0'), 8]` is inferred as a general array, which cannot be
 passed as a CIDR tuple. The example above works in both JavaScript and TypeScript.
+
+<a name="ipaddrSubnetContains"></a>
+### `ipaddr.subnetContains(outer, inner)`
+
+Returns `true` if the CIDR range `inner` lies fully inside the CIDR range `outer`. Both arguments are `[address, prefixLength]` pairs, as returned by `parseCIDR()`. Ranges of different address families never contain each other, so the result is `false`. Throws if a prefix length is out of range.
+
+```js
+const outer = ipaddr.parseCIDR('10.4.0.0/16');
+ipaddr.subnetContains(outer, ipaddr.parseCIDR('10.4.5.0/24')); // => true
+ipaddr.subnetContains(outer, ipaddr.parseCIDR('10.5.0.0/24')); // => false
+ipaddr.subnetContains(outer, ipaddr.parseCIDR('10.0.0.0/8'));  // => false
+
+ipaddr.subnetContains(ipaddr.parseCIDR('2001:db8::/32'), ipaddr.parseCIDR('2001:db8:1::/64')); // => true
+```
 
 <a name="ipaddrFromByteArray"></a>
 ### `ipaddr.fromByteArray(bytes)`
